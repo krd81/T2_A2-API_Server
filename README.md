@@ -21,6 +21,8 @@ Endpoints (not every entity needs to have full CRUD endpoints)
 ## R6
 ERD
 
+
+
 ## R7
 Third party services
 

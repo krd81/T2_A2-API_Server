@@ -16,7 +16,7 @@ class Booking(db.Model):
     desk_id = db.Column(db.String, db.ForeignKey("desks.id"), nullable=False)
     desk = db.relationship("Desk", back_populates = "bookings")
 
-    user_id = db.Column(db.String, db.ForeignKey("users.employee_id"), nullable=False)
+    user_id = db.Column(db.String, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", back_populates = "bookings")
 
     week_id = db.Column(db.String, db.ForeignKey("dates.id"))
@@ -26,10 +26,10 @@ class Booking(db.Model):
 
     
 
-class ClassSchema(ma.Schema):
+class BookingSchema(ma.Schema):
     weekday = fields.String(validate=OneOf(DAYS))
     desk = fields.Nested("DeskSchema", only=["id"])
     user = fields.Nested("UserSchema", exclude=["password", "is_admin"])
 
     class Meta:
-        fields = ("id", "users.employee_id", "desks.id", "dates.id", "weekday", "date_created")
+        fields = ("id", "users.id", "desks.id", "dates.id", "weekday", "date_created")

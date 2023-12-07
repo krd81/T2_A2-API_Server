@@ -13,7 +13,7 @@ class Dept(db.Model):
 
 
 
-class ClassSchema(ma.Schema):
+class DeptSchema(ma.Schema):
     name = fields.String(validate=OneOf(DEPARTMENTS))
     class Meta:
         fields = ("id", "name")

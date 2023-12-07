@@ -21,34 +21,6 @@ def db_create():
 @db_commands.cli.command("seed")
 def db_seed():
 
-    '''
-    json_data = [
-            
-        {"id": "2024_1",
-        "mon": "2024-01-01",
-        "tue": "2024-01-02",
-        "wed": "2024-01-03",
-        "thu": "2024-01-04",
-        "fri": "2024-01-05"
-        },
-        {
-        "id": "2024_2",
-        "mon": "2024-01-08",
-        "tue": "2024-01-09",
-        "wed": "2024-01-10",
-        "thu": "2024-01-11",
-        "fri": "2024-01-12"
-        },
-        {
-        "id": "2024_3",
-        "mon": "2024-01-15",
-        "tue": "2024-01-16",
-        "wed": "2024-01-17",
-        "thu": "2024-01-18",
-        "fri": "2024-01-19"
-        }]
-    '''
-
     dates_json = []
     dates = []
 
@@ -92,10 +64,9 @@ def db_seed():
 
 
 
-
     users = [
         User(
-            employee_id = "312093",
+            id = "312093",
             f_name = "Kathy",
             l_name = "Morrison",
             email = "kathy.morrison@company.com",
@@ -104,7 +75,7 @@ def db_seed():
             dept_id = depts[6].id
         ),
         User(
-            employee_id = "215290",
+            id = "215290",
             f_name = "Richard",
             l_name = "Lawson",
             email = "richard.lawson@company.com",
@@ -113,7 +84,7 @@ def db_seed():
             dept_id = depts[0].id
         ),
         User(
-            employee_id = "485981",
+            id = "485981",
             f_name = "Hannah",
             l_name = "Fisher",
             email = "hannah.fisher@company.com",
@@ -122,7 +93,7 @@ def db_seed():
             dept_id = depts[2].id
         ),
         User(
-            employee_id = "525955",
+            id = "525955",
             f_name = "Craig",
             l_name = "Stevenson",
             email = "craig.stevenson@company.com",
@@ -139,31 +110,31 @@ def db_seed():
         Booking(
             weekday = "wed",
             desk_id = "3A_02",
-            user_id = users[0].employee_id,
+            user_id = users[0].id,
             week_id = "2024_1"
         ),
         Booking(
             weekday = "wed",
             desk_id = "2B_05",
-            user_id = users[1].employee_id,
+            user_id = users[1].id,
             week_id = "2024_1"
         ),
         Booking(
             weekday = "fri",
             desk_id = "3A_02",
-            user_id = users[0].employee_id,
+            user_id = users[0].id,
             week_id = "2024_2"
         ),
         Booking(
             weekday = "mon",
             desk_id = "1B_01",
-            user_id = users[2].employee_id,
+            user_id = users[2].id,
             week_id = "2024_2"
         ),
         Booking(
             weekday = "tue",
             desk_id = "1B_01",
-            user_id = users[2].employee_id,
+            user_id = users[2].id,
             week_id = "2024_1"
         ),
     ]
@@ -171,17 +142,6 @@ def db_seed():
 
     db.session.add_all(bookings)
     db.session.commit()
-
-    # db.session.add_all()
-    # db.session.commit()
-
-
-    # db.session.add_all()
-    # db.session.commit()
-
-    # db.session.add_all()
-    # db.session.commit()
-
 
     print("Database seeded")
 

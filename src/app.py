@@ -22,12 +22,12 @@ def create_app():
     from db_setup import db_commands
     app.register_blueprint(db_commands)
 
-    # from controllers import registerable_controllers
+    from controllers import registerable_controllers
 
-    # for controller in registerable_controllers:
-        # app.register_blueprint(controller)
+    for controller in registerable_controllers:
+        app.register_blueprint(controller)
     
-    # print(app.url_map)
+    print(app.url_map)
 
     return app
 

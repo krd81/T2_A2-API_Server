@@ -5,7 +5,7 @@ from marshmallow.validate import OneOf, Regexp, And, Length
 class User(db.Model):
     __tablename__ = "users"
 
-    employee_id = db.Column(db.String(10), primary_key=True)
+    id = db.Column(db.String(10), primary_key=True) # Employee ref no
     f_name = db.Column(db.String, nullable=False)
     l_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
@@ -20,9 +20,15 @@ class User(db.Model):
 
 
 
-class ClassSchema(ma.Schema):
+class UserSchema(ma.Schema):
     dept = fields.Nested("DeptSchema", only=["name"])
-    bookings = fields.Nested("BookingSchema", only=["id", "desk_id"])
+    bookings = fields.Nested("BookingSchema", only=["id"])
+    f_name = fields.String(required=True)
+    l_name = fields.String(required=True)
+    email = fields.Email(required=True)
+    password = fields.String(required=True, 
+                validate=And(Length(min=8, error='Password must be between 8 and 14 characters'), 
+                Length(max=14, error='Password must be between 8 and 14 characters')))
 
     class Meta:
-        fields = ("employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept.name", "bookings")
+        fields = ("id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")

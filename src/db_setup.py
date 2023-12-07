@@ -21,6 +21,7 @@ def db_create():
 @db_commands.cli.command("seed")
 def db_seed():
 
+    '''
     json_data = [
             
         {"id": "2024_1",
@@ -46,35 +47,47 @@ def db_seed():
         "thu": "2024-01-18",
         "fri": "2024-01-19"
         }]
-            
+    '''
 
+    dates_json = []
     dates = []
 
-    with open ('./client_specs/dates_2024.json') as d:
-        dates = json.load(d)
+    with open ('./client_specs/dates_2024.json') as f:
+        dates_json = json.load(f)
 
+    for date in dates_json:
+        d = Date(
+            id = date.get("id"),
+            mon = date.get("mon"),
+            tue = date.get("tue"),
+            wed = date.get("wed"),
+            thu = date.get("thu"),
+            fri = date.get("fri")
+        )
+        dates.append(d)
     
     db.session.add_all(dates)
     db.session.commit()
 
     depts = []
-    for dept in DEPARTMENTS:        
-        depts.append(dept)
+    for dept in DEPARTMENTS:
+        d = Dept(
+            name = dept
+        )        
+        depts.append(d)
 
     db.session.add_all(depts)
     db.session.commit()
 
 
     desks = []
-    for desk in DESKS_1:
-        depts.append(desk)
+    for desk in ALL_DESKS:
+        d = Desk(
+            id = desk
+        )
+        desks.append(d)
 
-    for desk in DESKS_2:
-        depts.append(desk)
-
-    for desk in DESKS_3:
-        depts.append(desk)
-
+    print(desks)
     db.session.add_all(desks)
     db.session.commit()
 
@@ -88,7 +101,7 @@ def db_seed():
             l_name = "Morrison",
             email = "kathy.morrison@company.com",
             password = "candle12",
-            is_admin = "True",
+            is_admin = True,
             dept_id = depts[6].id
         ),
         User(
@@ -157,11 +170,11 @@ def db_seed():
     ]
 
 
-    db.session.add_all(bookings)
-    db.session.commit()
+    # db.session.add_all(bookings)
+    # db.session.commit()
 
-    db.session.add_all()
-    db.session.commit()
+    # db.session.add_all()
+    # db.session.commit()
 
 
     # db.session.add_all()
@@ -172,3 +185,4 @@ def db_seed():
 
 
     print("Database seeded")
+

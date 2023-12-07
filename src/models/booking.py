@@ -19,7 +19,7 @@ class Booking(db.Model):
     user = db.relationship("User", back_populates = "bookings")
 
     week_id = db.Column(db.String, db.ForeignKey("dates.id"))
-    week = db.relationship("Dates") # No need to populate the booking_date table
+    week = db.relationship("Date") # No need to populate the booking_date table
 
     
 

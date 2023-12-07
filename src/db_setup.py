@@ -87,7 +87,6 @@ def db_seed():
         )
         desks.append(d)
 
-    print(desks)
     db.session.add_all(desks)
     db.session.commit()
 
@@ -138,40 +137,40 @@ def db_seed():
 
     bookings = [
         Booking(
-            weekday = "",
-            desk_id = "",
-            user_id = "",
-            week_id = ""
+            weekday = "wed",
+            desk_id = "3A_02",
+            user_id = users[0].employee_id,
+            week_id = "2024_1"
         ),
         Booking(
-            weekday = "",
-            desk_id = "",
-            user_id = "",
-            week_id = ""
+            weekday = "wed",
+            desk_id = "2B_05",
+            user_id = users[1].employee_id,
+            week_id = "2024_1"
         ),
         Booking(
-            weekday = "",
-            desk_id = "",
-            user_id = "",
-            week_id = ""
+            weekday = "fri",
+            desk_id = "3A_02",
+            user_id = users[0].employee_id,
+            week_id = "2024_2"
         ),
         Booking(
-            weekday = "",
-            desk_id = "",
-            user_id = "",
-            week_id = ""
+            weekday = "mon",
+            desk_id = "1B_01",
+            user_id = users[2].employee_id,
+            week_id = "2024_2"
         ),
         Booking(
-            weekday = "",
-            desk_id = "",
-            user_id = "",
-            week_id = ""
+            weekday = "tue",
+            desk_id = "1B_01",
+            user_id = users[2].employee_id,
+            week_id = "2024_1"
         ),
     ]
 
 
-    # db.session.add_all(bookings)
-    # db.session.commit()
+    db.session.add_all(bookings)
+    db.session.commit()
 
     # db.session.add_all()
     # db.session.commit()

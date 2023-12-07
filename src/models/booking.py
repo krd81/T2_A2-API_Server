@@ -1,6 +1,7 @@
 from app import db, ma
 from marshmallow import fields
 from marshmallow.validate import OneOf, Regexp, And, Length
+from models.booking_date import Date
 from datetime import datetime
 
 DAYS = ("mon", "tue", "wed", "thu", "fri")
@@ -20,6 +21,8 @@ class Booking(db.Model):
 
     week_id = db.Column(db.String, db.ForeignKey("dates.id"))
     week = db.relationship("Date") # No need to populate the booking_date table
+
+    # Accessing the date in the week will be carried out by the controller
 
     
 

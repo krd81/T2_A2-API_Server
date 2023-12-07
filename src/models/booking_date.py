@@ -6,7 +6,7 @@ from datetime import date
 class Date(db.Model):
     __tablename__ = "dates"
 
-    id = db.Column(db.String(7), primary_key=True, autoincrement=False)
+    id = db.Column(db.String(7), primary_key=True)
     mon = db.Column(db.String(10), nullable=False, unique=True)
     tue = db.Column(db.String(10), nullable=False, unique=True)
     wed = db.Column(db.String(10), nullable=False, unique=True)

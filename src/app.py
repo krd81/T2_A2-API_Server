@@ -30,3 +30,12 @@ def create_app():
     # print(app.url_map)
 
     return app
+
+
+# Token exists but is incorrect/expired
+@jwt.invalid_token_loader
+# Token not present
+@jwt.unauthorized_loader
+def unauthorised_user():
+    print(error)
+    return {'error': 'User is unauthorised'}, 401

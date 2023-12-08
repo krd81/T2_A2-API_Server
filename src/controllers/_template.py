@@ -33,7 +33,7 @@ def CREATE():
 
 
 # The PUT route endpoint (edit existing)
-@temp.route('/<int:id>', methods=['PUT'])
+@temp.route('/<int:id>', methods=['PUT', 'PATCH'])
 def EDIT():
     pass
 

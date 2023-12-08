@@ -10,38 +10,67 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
 from datetime import date, timedelta
 
-
-contoller_name = Blueprint('temp', __name__, url_prefix='/temp')
+# ALL DEPARTMENT ACTIONS NEED TO BE RESTRICTED TO ADMIN ONLY
+dept = Blueprint('dept', __name__, url_prefix='/dept')
 unauthorised_user
 
 # The GET route endpoint (show all)
-@temp.route('/')
-def GET_ALL_ROUTE():
-    pass
-
-# The GET route endpoint (show all)
-@temp.route('/<int:id>')
-def GET_ONE_ROUTE():
-    pass
-
+@dept.route('/')
+def show_depts():
+    db_depts = db.select(Dept)
+    depts = db.session.scalars(db_depts).all()
+    return DeptSchema(many=True).dump(depts)
 
 
 # The POST route endpoint (create new)
-@temp.route('/', methods=['POST'])
-def CREATE():
-    pass
+@dept.route('/', methods=['POST'])
+def add_dept():
+    new_dept = NewDeptSchema().load(request.json)
+
+    dept = Dept(
+        name = new_dept["name"]
+    )
+
+    db.session.add(dept)
+    db.session.commit()
+
+    return NewDeptSchema().dump(dept), 200
 
 
 # The PUT route endpoint (edit existing)
-@temp.route('/<int:id>', methods=['PUT'])
-def EDIT():
-    pass
+@dept.route('/<int:id>', methods=['PUT', 'PATCH'])
+def update_dept(id):
+    update_info = NewDeptSchema().load(request.json)
+    stmt = db.select(Dept).filter_by(id=id)
+    dept = db.session.scalar(stmt)
+
+    if dept:
+        dept.name = update_info.get("name", dept.name)
+
+        db.session.commit()
+        return NewDeptSchema().dump(dept), 201
+    else:
+        return {'message' : 'department not found - please try again'}, 404
+
+
 
 
 # The DELETE route endpoint (delete existing)
-@temp.route('/<int:id>', methods=['DELETE'])
-def DELETE():
-    pass
+@dept.route('/<int:id>', methods=['DELETE'])
+def delete_dept(id):
+    # delete_dept = DeptSchema().load(request.json)
+    stmt = db.select(Dept).filter_by(id=id)
+    dept = db.session.scalar(stmt)
+
+    if dept:
+        db.session.delete(dept)
+        db.session.commit()
+        return {}, 200
+    else:
+        return {'message' : 'department not found - please try again'}, 404
+
+
+
 
 
 # return {'message' : 'obj not found - please try again'}, 404

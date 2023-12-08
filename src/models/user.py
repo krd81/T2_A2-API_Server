@@ -5,7 +5,8 @@ from marshmallow.validate import OneOf, Regexp, And, Length
 class User(db.Model):
     __tablename__ = "users"
 
-    id = db.Column(db.String(10), primary_key=True) # Employee ref no
+    id = db.Column(db.Integer, primary_key=True)
+    employee_id = db.Column(db.String(10), nullable=False, unique=True)
     f_name = db.Column(db.String, nullable=False)
     l_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
@@ -23,6 +24,20 @@ class User(db.Model):
 class UserSchema(ma.Schema):
     dept = fields.Nested("DeptSchema", only=["name"])
     bookings = fields.Nested("BookingSchema", only=["id"])
+    # f_name = fields.String(required=True)
+    # l_name = fields.String(required=True)
+    # email = fields.Email(required=True)
+    # password = fields.String(required=True, 
+                # validate=And(Length(min=8, error='Password must be between 8 and 14 characters'), 
+                # Length(max=14, error='Password must be between 8 and 14 characters')))
+
+    class Meta:
+        fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")
+
+
+class CreateUserSchema(ma.Schema):
+    dept = fields.Nested("DeptSchema", only=["name"])
+    bookings = fields.Nested("BookingSchema", only=["id"])
     f_name = fields.String(required=True)
     l_name = fields.String(required=True)
     email = fields.Email(required=True)
@@ -31,4 +46,5 @@ class UserSchema(ma.Schema):
                 Length(max=14, error='Password must be between 8 and 14 characters')))
 
     class Meta:
-        fields = ("id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")
+        fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")
+

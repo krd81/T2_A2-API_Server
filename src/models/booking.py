@@ -16,7 +16,7 @@ class Booking(db.Model):
     desk_id = db.Column(db.String, db.ForeignKey("desks.id"), nullable=False)
     desk = db.relationship("Desk", back_populates = "bookings")
 
-    user_id = db.Column(db.String, db.ForeignKey("users.id"), nullable=False)
+    user_id = db.Column(db.String, db.ForeignKey("users.employee_id"), nullable=False)
     user = db.relationship("User", back_populates = "bookings")
 
     week_id = db.Column(db.String, db.ForeignKey("dates.id"))

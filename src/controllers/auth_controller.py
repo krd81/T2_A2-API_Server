@@ -19,16 +19,17 @@ unauthorised_user
 @auth.route('/signup', methods = ['POST'])
 def signup():
     # try:
-        current_user = UserSchema().load(request.json)                  
+        current_user = CreateUserSchema().load(request.json)                  
         # Create new user
         user = User(
-            id = current_user['id'],
+            employee_id = current_user['employee_id'],
             f_name = current_user['f_name'],
             l_name = current_user['l_name'],
             email = current_user['email'],
             password = bcrypt.generate_password_hash(current_user['password']).decode('utf8'),
             dept_id = current_user['dept_id']
         )
+        current_user = None
         # Add and commit the new user to the database
         db.session.add(user)
         db.session.commit()
@@ -45,11 +46,11 @@ def signup():
 def signin():
     current_user = UserSchema().load(request.json)
 
-    stmt = db.select(User).filter_by(id=current_user['id'])
+    stmt = db.select(User).filter_by(employee_id=current_user['employee_id'])
     user = db.session.scalar(stmt)
 
     if user and bcrypt.check_password_hash(user.password, current_user['password']):
         token = create_access_token(identity=user.id, additional_claims={'id': user.id}, expires_delta = timedelta(hours = 100))
-        return {'token' : token, 'user' : UserSchema(exclude=['id', 'is_admin']).dump(user)}, 200
+        return {'token' : token, 'user' : UserSchema(exclude=['password', 'is_admin']).dump(user)}, 200
     else:
         return {'error' : 'Username or password is incorrect'}, 409

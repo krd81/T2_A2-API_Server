@@ -17,3 +17,8 @@ class DeptSchema(ma.Schema):
     name = fields.String(validate=OneOf(DEPARTMENTS))
     class Meta:
         fields = ("id", "name")
+
+
+class NewDeptSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name")

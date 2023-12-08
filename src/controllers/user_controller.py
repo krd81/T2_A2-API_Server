@@ -11,36 +11,36 @@ from sqlalchemy.exc import IntegrityError
 from datetime import date, timedelta
 
 
-contoller_name = Blueprint('temp', __name__, url_prefix='/temp')
+user = Blueprint('user', __name__, url_prefix='/user')
 unauthorised_user
 
 # The GET route endpoint (show all)
-@temp.route('/')
-def GET_ALL_ROUTE():
+@user.route('/')
+def get_users():
     pass
 
 # The GET route endpoint (show all)
-@temp.route('/<int:id>')
-def GET_ONE_ROUTE():
+@user.route('/<int:id>')
+def get_user(id):
     pass
 
 
 
 # The POST route endpoint (create new)
-@temp.route('/', methods=['POST'])
+@user.route('/', methods=['POST'])
 def CREATE():
     pass
 
 
 # The PUT route endpoint (edit existing)
-@temp.route('/<int:id>', methods=['PUT'])
-def EDIT():
+@user.route('/<int:id>', methods=['PUT', 'PATCH'])
+def change_password(id):
     pass
 
 
 # The DELETE route endpoint (delete existing)
-@temp.route('/<int:id>', methods=['DELETE'])
-def DELETE():
+@user.route('/<int:id>', methods=['DELETE'])
+def delete_user(id):
     pass
 
 

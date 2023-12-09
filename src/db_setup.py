@@ -139,6 +139,7 @@ def db_seed():
     ]
 
 
+    
     db.session.add_all(bookings)
     db.session.commit()
 

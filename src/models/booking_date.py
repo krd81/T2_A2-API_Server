@@ -13,8 +13,12 @@ class Date(db.Model):
     thu = db.Column(db.String(10), nullable=False, unique=True)
     fri = db.Column(db.String(10), nullable=False, unique=True)
 
+    
 
 
 class DateSchema(ma.Schema):
     class Meta:
         fields = ("id", "mon", "tue", "wed", "thu", "fri")
+
+
+

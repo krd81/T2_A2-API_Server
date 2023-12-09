@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from app import db, unauthorised_user, bcrypt
+from controllers.booking_controller import booking
 from models.booking import *
 from models.booking_date import *
 from models.dept import *
@@ -12,6 +13,7 @@ from datetime import date, timedelta
 
 
 user = Blueprint('user', __name__, url_prefix='/user')
+user.register_blueprint(booking)
 unauthorised_user
 
 # The GET route endpoint (show all)

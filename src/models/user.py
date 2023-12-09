@@ -23,7 +23,7 @@ class User(db.Model):
 
 class UserSchema(ma.Schema):
     dept = fields.Nested("DeptSchema", only=["name"])
-    bookings = fields.Nested("BookingSchema", only=["id"])
+    bookings = fields.Nested("BookingSchema", many=True, only=["id", "desk_id", "week_id", "weekday"])
     # f_name = fields.String(required=True)
     # l_name = fields.String(required=True)
     # email = fields.Email(required=True)

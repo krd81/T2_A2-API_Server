@@ -22,21 +22,25 @@ class Booking(db.Model):
     week_id = db.Column(db.String, db.ForeignKey("dates.id"))
     week = db.relationship("Date") # No need to populate the booking_date table
 
-    day = "wed"
 
     # booking_date = getattr(db.select(Date).filter_by(id=week_id), "wed")
     # booking_date = db.select([Date.dates.c.wed]).where(Date.dates.week_id == week_id)
-    stmt = db.select(Date).filter_by(id=week_id)
+    # stmt = db.select(Date).filter_by(id=week_id)
+    
     # get_dates = db.session.scalar(stmt)
-    dates = DateSchema().dump(stmt)
-    booking_date = dates.get(str(weekday))
+    # dates = DateSchema().dump(get_dates)
+    # booking_date = db.Column(db.Date, default=dates.get(str(weekday)))
+
+    
     # Accessing the date in the week will be carried out by the controller
 
 class BookingSchema(ma.Schema):
     weekday = fields.String(validate=OneOf(DAYS))
     desk = fields.Nested("DeskSchema", only=["id"])
     user = fields.Nested("UserSchema", exclude=["password", "is_admin", "bookings"])
-    booking_date = fields.Date("dd/mm/yyyy")
+    week = fields.Nested("DateSchema", only=["id"])
+
+    # booking_date = fields.Date("dd/mm/yyyy")
 
     class Meta:
-        fields = ("id", "user", "desk", "week.id", "weekday", "booking_date", "date_created")
+        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created")

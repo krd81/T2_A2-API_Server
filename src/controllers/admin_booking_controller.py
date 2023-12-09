@@ -1,10 +1,7 @@
 from flask import Blueprint, request
 from app import db, unauthorised_user, bcrypt
 from models.booking import *
-from models.booking_date import *
-from models.dept import *
-from models.desk import *
-
+from models.booking_date import * #???
 from flask_jwt_extended import jwt_required, create_access_token
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
@@ -13,7 +10,7 @@ from datetime import date, timedelta
 # ADMIN ONLY FUNCTIONS
 
 
-admin_booking = Blueprint('booking', __name__, url_prefix='/booking')
+admin_booking = Blueprint('admin_booking', __name__, url_prefix='/booking')
 unauthorised_user
 
 # The GET route endpoint (show all)
@@ -30,7 +27,7 @@ def get_bookings():
 def get_booking(id):
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
-
+    
     if booking:
         return BookingSchema().dump(booking), 200
     else:
@@ -77,5 +74,4 @@ def delete_booking(id):
 
 
 
-# return {'message' : 'obj not found - please try again'}, 404
-# return .dump(obj), 200
+

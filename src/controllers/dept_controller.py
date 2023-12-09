@@ -10,6 +10,7 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
 from datetime import date, timedelta
 
+
 # ALL DEPARTMENT ACTIONS NEED TO BE RESTRICTED TO ADMIN ONLY
 dept = Blueprint('dept', __name__, url_prefix='/dept')
 unauthorised_user
@@ -19,7 +20,7 @@ unauthorised_user
 def show_depts():
     db_depts = db.select(Dept)
     depts = db.session.scalars(db_depts).all()
-    return DeptSchema(many=True).dump(depts)
+    return DeptSchema(many=True).dump(depts), 200
 
 
 # The POST route endpoint (create new)
@@ -34,7 +35,7 @@ def add_dept():
     db.session.add(dept)
     db.session.commit()
 
-    return NewDeptSchema().dump(dept), 200
+    return NewDeptSchema().dump(dept), 201
 
 
 # The PUT route endpoint (edit existing)
@@ -48,7 +49,7 @@ def update_dept(id):
         dept.name = update_info.get("name", dept.name)
 
         db.session.commit()
-        return NewDeptSchema().dump(dept), 201
+        return NewDeptSchema().dump(dept), 200
     else:
         return {'message' : 'department not found - please try again'}, 404
 

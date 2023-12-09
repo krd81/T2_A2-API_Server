@@ -14,35 +14,73 @@ from datetime import date, timedelta
 desk = Blueprint('desk', __name__, url_prefix='/desk')
 unauthorised_user
 
+# ADMIN ONLY?
+
 # The GET route endpoint (show all)
 @desk.route('/')
 def get_desks():
-    pass
+    db_desks = db.select(Desk)
+    desks = db.session.scalars(db_desks)
 
-# The GET route endpoint (show all)
-@desk.route('/<int:id>')
+    return DeskSchema(many=True).dump(desks), 200
+
+
+# The GET route endpoint (show desk)
+@desk.route('/<string:id>')
 def get_desk(id):
-    pass
+    stmt = db.select(Desk).filter_by(id=id)
+    desk = db.session.scalar(stmt)
+
+    if desk:
+        return DeskSchema().dump(desk), 200        
+    else:
+        return {'message' : 'desk not found - please try again'}, 404
 
 
 
 # The POST route endpoint (create new)
 @desk.route('/', methods=['POST'])
 def add_desk():
-    pass
+    new_desk = DeskSchema().load(request.json)
+
+    desk = Desk(
+        id = new_desk["id"]
+    )
+
+    db.session.add(desk)
+    db.session.commit()
+    return DeskSchema().dump(desk), 201
 
 
-# The PUT route endpoint (edit existing)
-@desk.route('/<int:id>', methods=['PUT', 'PATCH'])
+
+# The PUT route endpoint (edit desk)
+@desk.route('/<string:id>', methods=['PUT', 'PATCH'])
 def EDIT(id):
-    pass
+    update_desk = DeskSchema().load(request.json)
+    stmt = db.select(Desk).filter_by(id=id)
+    desk = db.session.scalar(stmt)
+
+    if desk:
+        desk.id = update_desk.get("id", desk.id)
+        desk.available = update_desk.get("available", desk.available)
+        db.session.commit()
+        return DeskSchema().dump(desk), 200
+    else:
+        return {'message' : 'desk not found - please try again'}, 404
 
 
 # The DELETE route endpoint (delete existing)
-@desk.route('/<int:id>', methods=['DELETE'])
+@desk.route('/<string:id>', methods=['DELETE'])
 def delete_desk(id):
-    pass
+    stmt = db.select(Desk).filter_by(id=id)
+    desk = db.session.scalar(stmt)
+
+    if desk:
+        db.session.delete(desk)
+        db.session.commit()
+        return {}, 200
+    else:
+        return {'message' : 'desk not found - please try again'}, 404
 
 
-# return {'message' : 'obj not found - please try again'}, 404
-# return .dump(obj), 200
+

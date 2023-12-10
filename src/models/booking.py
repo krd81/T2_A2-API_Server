@@ -22,7 +22,18 @@ class Booking(db.Model):
     week_id = db.Column(db.String, db.ForeignKey("dates.id"))
     week = db.relationship("Date") # No need to populate the booking_date table
 
-    booking_date = ""
+    match weekday:
+        case "mon":
+            booking_date = db.Column(db.String, db.ForeignKey("dates.mon"))
+        case "tue":
+            booking_date = db.Column(db.String, db.ForeignKey("dates.tue"))
+        case "wed":
+            booking_date = db.Column(db.String, db.ForeignKey("dates.wed"))
+        case "thu":
+            booking_date = db.Column(db.String, db.ForeignKey("dates.thu"))
+        case "fri":
+            booking_date = db.Column(db.String, db.ForeignKey("dates.fri"))
+
 
     # booking_date = getattr(db.select(Date).filter_by(id=week_id), "wed")
     # booking_date = db.select([Date.dates.c.wed]).where(Date.dates.week_id == week_id)
@@ -41,7 +52,18 @@ class BookingSchema(ma.Schema):
     user = fields.Nested("UserSchema", exclude=["password", "is_admin", "bookings"])
     week = fields.Nested("DateSchema", only=["id"])
 
-    # booking_date = fields.Date("dd/mm/yyyy")
+    match weekday:
+        case "mon":
+            booking_date = fields.Nested("DateSchema", only=["mon"])
+        case "tue":
+            booking_date = fields.Nested("DateSchema", only=["tue"])
+        case "wed":
+            booking_date = fields.Nested("DateSchema", only=["wed"])
+        case "thu":
+            booking_date = fields.Nested("DateSchema", only=["thu"])
+        case "fri":
+            booking_date = fields.Nested("DateSchema", only=["fri"])
+
 
     class Meta:
-        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created", "booking_date")
+        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created", "booking_date_mon", "booking_date_tue", "booking_date_wed", "booking_date_thu", "booking_date_fri")

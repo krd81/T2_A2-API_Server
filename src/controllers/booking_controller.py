@@ -13,6 +13,25 @@ from datetime import date, timedelta
 booking = Blueprint('booking', __name__, url_prefix='/<string:employee_id>/booking')
 unauthorised_user
 
+def date_lookup(week_id, weekday):
+    stmt = db.select(Date).filter_by(id=week_id)
+    dates = db.session.scalar(stmt)
+    match weekday:
+        case "mon":
+            booking_date = dates.mon
+        case "tue":
+            booking_date = dates.tue
+        case "wed":
+            booking_date = dates.wed
+        case "thu":
+            booking_date = dates.thu
+        case "fri":
+            booking_date = dates.fri
+
+    return booking_date
+
+    
+
 # The GET route endpoint (show all for individual user)
 @booking.route('/')
 def get_bookings(employee_id):
@@ -27,9 +46,12 @@ def get_bookings(employee_id):
 def get_booking(employee_id, id):
     stmt = db.select(Booking).filter_by(user_id=employee_id, id=id)
     booking = db.session.scalar(stmt)
+    booking.booking_date = date_lookup(booking.week_id, booking.weekday)
+    
+    update_booking = BookingSchema.load(booking)
 
     if booking:
-        return BookingSchema().dump(booking), 200
+        return BookingSchema().dump(update_booking), 200
     else:
         return {'message' : 'booking not found - please try again'}, 404
 

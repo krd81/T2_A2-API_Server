@@ -22,6 +22,7 @@ class Booking(db.Model):
     week_id = db.Column(db.String, db.ForeignKey("dates.id"))
     week = db.relationship("Date") # No need to populate the booking_date table
 
+    booking_date = ""
 
     # booking_date = getattr(db.select(Date).filter_by(id=week_id), "wed")
     # booking_date = db.select([Date.dates.c.wed]).where(Date.dates.week_id == week_id)
@@ -43,4 +44,4 @@ class BookingSchema(ma.Schema):
     # booking_date = fields.Date("dd/mm/yyyy")
 
     class Meta:
-        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created")
+        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created", "booking_date")

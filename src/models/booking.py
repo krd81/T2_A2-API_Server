@@ -10,34 +10,11 @@ DAYS = ("mon", "tue", "wed", "thu", "fri")
 class Booking(db.Model):
     __tablename__ = "bookings"
 
-    # def get_week_no(week_id:str):
-    #     index = week_id.index("_")+1
-    #     week_no = week_id[index:-1]
-    #     return week_no
-        
-    def calc_add_day(week_id, weekday):
-        
-
-        add_weeks = (week_id - 1) * 7
-        add_days = 0
-        if (weekday == "tue"):
-            add_days = 1
-        elif (weekday == "wed"):
-            add_days = 2
-        elif (weekday == "thu"):
-            add_days = 3
-        elif (weekday == "fri"):
-            add_days = 4
-
-        add_days = add_weeks + add_days
-        return add_days
-
-    
-
-
-
     id = db.Column(db.Integer, primary_key=True)
+    # booking_date_id = db.relationship("Date", back_populates = "id")
+
     weekday = db.Column(db.String(3), nullable=False)
+    booking_date_weekday = db.relationship("Date", back_populates = "weekday")
     date_created = db.Column(db.Date, default=datetime.now().strftime('%Y-%m-%d'))
 
     desk_id = db.Column(db.String, db.ForeignKey("desks.id"), nullable=False)
@@ -47,12 +24,10 @@ class Booking(db.Model):
     user = db.relationship("User", back_populates = "bookings")
 
     week_id = db.Column(db.Integer, nullable=False)
-    # week = db.relationship("Date") # No need to populate the booking_date table
+    booking_date_week = db.relationship("Date", back_populates = "week") 
     
-    start_date = datetime(2024, 1, 1)
-
-    booking_date = start_date + calc_add_day(week_id, weekday)
-    booking_date_id = db.Column(db.String, default=booking_date)
+    # booking_date_id = db.Column(db.String, db.ForeignKey("booking_dates.booking_day_id"), unique=False)
+    booking_date = db.relationship("Date", back_populates = "booking_day_id")
 
 
 
@@ -60,11 +35,12 @@ class BookingSchema(ma.Schema):
     weekday = fields.String(validate=OneOf(DAYS))
     desk = fields.Nested("DeskSchema", only=["id"])
     user = fields.Nested("UserSchema", exclude=["id", "password", "is_admin", "bookings"])
+    booking_date = fields.Nested("Date")
 
 
 
     class Meta:
-        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created", "booking_date")
+        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created", "booking_date", "booking_day_id")
 '''
 class Misc():
         def calc_booking_date(week_id, weekday):

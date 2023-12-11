@@ -1,10 +1,10 @@
 from flask import Blueprint, request
 from app import db, unauthorised_user, bcrypt
 from controllers.booking_controller import booking
-from models.booking import *
-from models.booking_date import *
-from models.dept import *
-from models.desk import *
+# from models.booking import *
+# from models.booking_date import *
+# from models.dept import *
+# from models.desk import *
 from models.user import *
 from auth import authorise
 from flask_jwt_extended import jwt_required, create_access_token

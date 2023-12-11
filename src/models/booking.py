@@ -1,7 +1,8 @@
 from app import db, ma
+from sqlalchemy import func
 from marshmallow import fields
 from marshmallow.validate import OneOf, Regexp, And, Length
-from models.booking_date import *
+# from models.booking_date import *
 
 from datetime import datetime, timedelta
 
@@ -14,7 +15,7 @@ class Booking(db.Model):
     # booking_date_id = db.relationship("Date", back_populates = "id")
 
     weekday = db.Column(db.String(3), nullable=False)
-    booking_date_weekday = db.relationship("Date", back_populates = "weekday")
+    # booking_date_weekday = db.relationship("Date", back_populates = "weekday")
     date_created = db.Column(db.Date, default=datetime.now().strftime('%Y-%m-%d'))
 
     desk_id = db.Column(db.String, db.ForeignKey("desks.id"), nullable=False)
@@ -24,10 +25,21 @@ class Booking(db.Model):
     user = db.relationship("User", back_populates = "bookings")
 
     week_id = db.Column(db.Integer, nullable=False)
-    booking_date_week = db.relationship("Date", back_populates = "week") 
+    # booking_date_week = db.relationship("Date", back_populates = "week") 
     
     # booking_date_id = db.Column(db.String, db.ForeignKey("booking_dates.booking_day_id"), unique=False)
-    booking_date = db.relationship("Date", back_populates = "booking_day_id")
+    # booking_date = db.relationship("Date", back_populates = "booking_day_id")
+    
+
+    def get_booking_ref(self, desk, week, day):
+        booking_ref = func.concat(desk, week, day)
+        return booking_ref
+    
+    booking_ref = get_booking_ref(None, desk_id, week_id, weekday)
+
+    # booking_ref = desk_id + week_id + weekday
+    # booking_ref = {"desk_id" : desk_id, "week_id": week_id, "weekday" : weekday}
+    # print(type(booking_ref))
 
 
 
@@ -35,7 +47,7 @@ class BookingSchema(ma.Schema):
     weekday = fields.String(validate=OneOf(DAYS))
     desk = fields.Nested("DeskSchema", only=["id"])
     user = fields.Nested("UserSchema", exclude=["id", "password", "is_admin", "bookings"])
-    booking_date = fields.Nested("Date")
+    # booking_date = fields.Nested("Date")
 
 
 

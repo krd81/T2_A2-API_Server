@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from app import db, unauthorised_user, bcrypt
 from auth import authorise
 from models.booking import *
-from models.booking_date import * #???
+# from models.booking_date import * #???
 from flask_jwt_extended import jwt_required, create_access_token
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError

@@ -144,6 +144,9 @@ def db_seed():
     db.session.add_all(bookings)
     db.session.commit()
 
+    print("Database seeded")
+    
+    '''
     booking_dates = []
 
     for booking in bookings:
@@ -151,7 +154,6 @@ def db_seed():
             # _id = booking.id,
             week_id = booking.week_id,
             weekday_id = booking.weekday,
-            # booking_date = booking_date.calc_booking_date(booking.week_id, booking.weekday_id)
             booking_day_id = booking_date.calc_booking_date(booking.week_id, booking.weekday_id)   
         )
         booking_dates.append(booking_date)
@@ -159,6 +161,6 @@ def db_seed():
     db.session.add_all(booking_dates)
     db.session.add_all(bookings)
     db.session.commit()
-
-    print("Database seeded")
+    '''
+   
 

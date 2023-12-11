@@ -3,7 +3,7 @@ from app import db, unauthorised_user, bcrypt
 from auth import authorise
 from models.booking import *
 from models.user import *
-from models.booking_date import * #???
+# from models.booking_date import * #???
 from flask_jwt_extended import jwt_required, create_access_token
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
@@ -14,7 +14,7 @@ from datetime import date, timedelta
 
 
 booking = Blueprint('booking', __name__, url_prefix='/<string:employee_id>/booking')
-unauthorised_user
+# unauthorised_user
 
    
 
@@ -33,7 +33,7 @@ def get_bookings(employee_id):
 
         return BookingSchema(many=True).dump(bookings), 200
     else:
-        return {"message" : "You are not authorised to access this resource"}
+        return {"message" : "You are not authorised to access this resource"}, 401
 
 
 # The GET route endpoint (show booking)
@@ -53,7 +53,7 @@ def get_booking(employee_id, id):
         else:
             return {'message' : 'booking not found - please try again'}, 404
     else:
-        return {"message" : "You are not authorised to access this resource"}
+        return {"message" : "You are not authorised to access this resource"}, 401
 
     
 
@@ -65,6 +65,7 @@ def get_booking(employee_id, id):
 def new_booking(employee_id):
     stmt = db.select(User).filter_by(employee_id=employee_id)
     user = db.session.scalar(stmt)
+    
 
     if user: 
         authorise(user.id)   
@@ -74,20 +75,29 @@ def new_booking(employee_id):
             weekday = new_booking["weekday"],
             desk_id = new_booking["desk_id"],
             user_id = employee_id,
-            week_id = new_booking["week_id"]
+            week_id = new_booking["week_id"]            
         )
 
-        db.session.add(booking)
-        db.session.commit()
+        # booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday)
+        stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
+        # stmt = db.select(Booking).filter_by(booking_ref=booking.booking_ref)
+        conflicting_booking = db.session.scalar(stmt)
+      
+        if not conflicting_booking:           
+            db.session.add(booking)
+            db.session.commit()
 
-        return BookingSchema().dump(booking), 201
+            return BookingSchema().dump(booking), 201
+        else:
+            return {"message" : "Desk is unavailable - please try again"}, 409
     else:
-        return {"message" : "You are not authorised to access this resource"}
+        return {"message" : "You are not authorised to access this resource"}, 401
 
 
 
 
 # The PUT route endpoint (edit existing) # /user_id/booking/booking_id [PUT]
+# EDIT route needs to check for conflicts as per create!
 @jwt_required()
 @booking.route('/<int:id>', methods=['PUT', 'PATCH'])
 def edit_booking(employee_id, id):
@@ -111,7 +121,7 @@ def edit_booking(employee_id, id):
         else:
             return {'message' : 'booking not found - please try again'}, 404  
     else:
-        return {"message" : "You are not authorised to access this resource"}
+        return {"message" : "You are not authorised to access this resource"}, 401
 
 
 
@@ -138,7 +148,7 @@ def delete_booking(employee_id, id):
         else:
             return {'message' : 'booking not found - please try again'}, 404                
     else:
-        return {"message" : "You are not authorised to access this resource"}
+        return {"message" : "You are not authorised to access this resource"}, 401
 
 
 

@@ -6,6 +6,7 @@ from models.booking_date import *
 from models.dept import *
 from models.desk import *
 from models.user import *
+from auth import authorise
 from flask_jwt_extended import jwt_required, create_access_token
 from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
@@ -17,9 +18,10 @@ user.register_blueprint(booking)
 unauthorised_user
 
 # The GET route endpoint (show all)
-# ADMIN ONLY
 @user.route('/')
+@jwt_required()
 def get_users():
+    authorise() #ADMIN only
     db_users = db.select(User)
     users = db.session.scalars(db_users).all()
     return UserSchema(exclude=["password"], many=True).dump(users), 200
@@ -27,12 +29,14 @@ def get_users():
 
 # The GET route endpoint (show user)
 # Can only see themselves (Admin can see all)
+@jwt_required()
 @user.route('/<string:id>')
 def get_user(id):
     stmt = db.select(User).filter_by(employee_id=id)
     user = db.session.scalar(stmt)
 
     if user:
+        authorise(user.id)
         return UserSchema(exclude=["password"]).dump(user), 200
     else:
         return {'message' : 'user not found - please try again'}, 404
@@ -58,13 +62,15 @@ def signin():
 
 # The PUT route endpoint (edit existing user: PASSWORD ONLY)
 @user.route('/<string:id>', methods=['PUT', 'PATCH'])
+@jwt_required()
 def change_password(id):
+    
     update_user = UserSchema().load(request.json)
     stmt = db.select(User).filter_by(employee_id=id)
     user = db.session.scalar(stmt)
 
     if user:
-        # bcrypt.generate_password_hash(new_user["password"]).decode("utf8")
+        authorise(user.id)
         user.password = bcrypt.generate_password_hash(update_user.get("password", user.password)).decode("utf8")
         db.session.commit()
         return UserSchema(exclude=["password"]).dump(user), 200

@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from app import db, unauthorised_user, bcrypt
+from auth import authorise
 from models.booking import *
 from models.booking_date import *
 from models.dept import *
@@ -14,11 +15,13 @@ from datetime import date, timedelta
 desk = Blueprint('desk', __name__, url_prefix='/desk')
 unauthorised_user
 
-# ADMIN ONLY?
+# ALL DESK ROUTES ARE ACCESSIBLE BY ADMIN ONLY
 
 # The GET route endpoint (show all)
+@jwt_required()
 @desk.route('/')
 def get_desks():
+    authorise()
     db_desks = db.select(Desk)
     desks = db.session.scalars(db_desks)
 
@@ -26,8 +29,10 @@ def get_desks():
 
 
 # The GET route endpoint (show desk)
+@jwt_required()
 @desk.route('/<string:id>')
 def get_desk(id):
+    authorise()
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
 
@@ -39,8 +44,10 @@ def get_desk(id):
 
 
 # The POST route endpoint (create new)
+@jwt_required()
 @desk.route('/', methods=['POST'])
 def add_desk():
+    authorise()
     new_desk = DeskSchema().load(request.json)
 
     desk = Desk(
@@ -54,8 +61,10 @@ def add_desk():
 
 
 # The PUT route endpoint (edit desk)
+@jwt_required()
 @desk.route('/<string:id>', methods=['PUT', 'PATCH'])
 def EDIT(id):
+    authorise()
     update_desk = DeskSchema().load(request.json)
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
@@ -70,8 +79,10 @@ def EDIT(id):
 
 
 # The DELETE route endpoint (delete existing)
+@jwt_required()
 @desk.route('/<string:id>', methods=['DELETE'])
 def delete_desk(id):
+    authorise()
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
 

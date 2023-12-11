@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from app import db, unauthorised_user, bcrypt
+from auth import authorise
 from models.booking import *
 from models.booking_date import * #???
 from flask_jwt_extended import jwt_required, create_access_token
@@ -11,20 +12,27 @@ from datetime import date, timedelta
 
 
 admin_booking = Blueprint('admin_booking', __name__, url_prefix='/booking')
-unauthorised_user
+# unauthorised_user() 
 
 # The GET route endpoint (show all)
+@jwt_required()
 @admin_booking.route('/')
 def get_bookings():
-    db_bookings = db.select(Booking)
-    bookings = db.session.scalars(db_bookings)
+    try:
+        authorise()
+        db_bookings = db.select(Booking)
+        bookings = db.session.scalars(db_bookings)
 
-    return BookingSchema(many=True).dump(bookings), 200
+        return BookingSchema(many=True).dump(bookings), 200
+    except TypeError:
+        return {"message" : "Not authorised - admin only"}
 
 
 # The GET route endpoint (show booking)
+@jwt_required()
 @admin_booking.route('/<int:id>') # /booking/booking_id [GET]
 def get_booking(id):
+    authorise()
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
     
@@ -40,8 +48,10 @@ def get_booking(id):
 
 
 # The PUT route endpoint (edit existing) 
+@jwt_required()
 @admin_booking.route('/<int:id>', methods=['PUT', 'PATCH'])
 def edit_booking(id):
+    authorise()
     update_booking = BookingSchema().load(request.json)
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
@@ -60,8 +70,10 @@ def edit_booking(id):
 
 
 # The DELETE route endpoint (delete existing)
+@jwt_required()
 @admin_booking.route('/<int:id>', methods=['DELETE'])
 def delete_booking(id):
+    authorise()
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
 

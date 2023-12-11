@@ -38,9 +38,10 @@ def db_seed():
         )
         dates.append(d)
     
-    db.session.add_all(dates)
-    db.session.commit()
+    # db.session.add_all(dates)
+    # db.session.commit() 
 
+    
     depts = []
     for dept in DEPARTMENTS:
         d = Dept(
@@ -110,31 +111,31 @@ def db_seed():
             weekday = "wed",
             desk_id = "3A_02",
             user_id = users[0].employee_id,
-            week_id = "2024_1"
+            week_id = "1"
         ),
         Booking(
             weekday = "wed",
             desk_id = "2B_05",
             user_id = users[1].employee_id,
-            week_id = "2024_1"
+            week_id = "1"
         ),
         Booking(
             weekday = "fri",
             desk_id = "3A_02",
             user_id = users[0].employee_id,
-            week_id = "2024_2"
+            week_id = "2"
         ),
         Booking(
             weekday = "mon",
             desk_id = "1B_01",
             user_id = users[2].employee_id,
-            week_id = "2024_2"
+            week_id = "2"
         ),
         Booking(
             weekday = "tue",
             desk_id = "1B_01",
             user_id = users[2].employee_id,
-            week_id = "2024_1"
+            week_id = "1"
         ),
     ]
 

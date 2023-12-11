@@ -37,5 +37,5 @@ def create_app():
 # Token not present
 @jwt.unauthorized_loader
 def unauthorised_user():
-    print(error)
+    # print(error)
     return {'error': 'User is unauthorised'}, 401

@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from app import db, unauthorised_user, bcrypt
+from auth import authorise
 from models.booking import *
 from models.booking_date import *
 from models.dept import *
@@ -16,9 +17,11 @@ unauthorised_user
 
 # ADMIN ONLY ROUTES: controls creating users / editing user details / deleting users
 
+@jwt_required()
 @admin.route("/", methods = ["POST"])
 def create_user():
     try:
+        authorise()
         new_user = CreateUserSchema().load(request.json)                  
         # Create new user
         user = User(
@@ -42,6 +45,7 @@ def create_user():
     
 
 # The PUT route endpoint (edit user details)
+@jwt_required()
 @admin.route("/<string:id>", methods=["PUT", "PATCH"])
 def edit_user(id):
     update_user = UserSchema().load(request.json)
@@ -49,6 +53,7 @@ def edit_user(id):
     user = db.session.scalar(stmt)
 
     if user:
+        authorise()
         user.employee_id = update_user.get("employee_id", user.employee_id)
         user.f_name = update_user.get("f_name", user.f_name)
         user.l_name = update_user.get("l_name", user.l_name)
@@ -65,12 +70,14 @@ def edit_user(id):
 
 
 # The DELETE route endpoint (delete user)
+@jwt_required()
 @admin.route("/<string:id>", methods=["DELETE"])
 def delete_user(id):
     stmt = db.select(User).filter_by(employee_id=id)
     user = db.session.scalar(stmt)
 
     if user:
+         authorise()
          db.session.delete(user)
          db.session.commit()
 

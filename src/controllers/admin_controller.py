@@ -13,7 +13,7 @@ from datetime import date, timedelta
 
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
-unauthorised_user
+# unauthorised_user
 
 # ADMIN ONLY ROUTES: controls creating users / editing user details / deleting users
 
@@ -21,7 +21,7 @@ unauthorised_user
 @admin.route("/", methods = ["POST"])
 def create_user():
     try:
-        authorise()
+        authorise(None, True)
         new_user = CreateUserSchema().load(request.json)                  
         # Create new user
         user = User(
@@ -53,13 +53,14 @@ def edit_user(id):
     user = db.session.scalar(stmt)
 
     if user:
-        authorise()
+        authorise(None, True)
         user.employee_id = update_user.get("employee_id", user.employee_id)
         user.f_name = update_user.get("f_name", user.f_name)
         user.l_name = update_user.get("l_name", user.l_name)
         user.email = update_user.get("email", user.email)
         user.password = update_user.get("password", user.password)
-        user.dept_id = update_user.get("dept_id", user.dept_id)        
+        user.dept_id = update_user.get("dept_id", user.dept_id)   
+        user.is_admin = update_user.get("is_admin", user.is_admin)     
         
         db.session.commit()
 
@@ -77,7 +78,7 @@ def delete_user(id):
     user = db.session.scalar(stmt)
 
     if user:
-         authorise()
+         authorise(None, True)
          db.session.delete(user)
          db.session.commit()
 

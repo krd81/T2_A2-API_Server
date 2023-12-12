@@ -16,8 +16,9 @@ class User(db.Model):
     dept_id =  db.Column(db.Integer, db.ForeignKey("departments.id", onupdate="cascade", ondelete="set null"), nullable=True)
     dept = db.relationship("Dept", back_populates = "users")
 
-    # bookings = db.relationship("Booking", back_populates = "user", cascade= "all, delete")
-    bookings = db.relationship("Booking", back_populates = "user")
+    # Required so that deleting a user, deletes any associated bookings
+    bookings = db.relationship("Booking", back_populates = "user", cascade= "all, delete") 
+    # bookings = db.relationship("Booking", back_populates = "user")
 
 
 

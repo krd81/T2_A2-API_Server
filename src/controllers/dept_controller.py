@@ -14,13 +14,13 @@ from datetime import date, timedelta
 # ADMIN ONLY FUNCTIONS
 
 dept = Blueprint('dept', __name__, url_prefix='/dept')
-unauthorised_user
+# unauthorised_user
 
 # The GET route endpoint (show all)
 @jwt_required()
 @dept.route('/')
 def show_depts():
-    authorise()
+    authorise(None, True)
     db_depts = db.select(Dept)
     depts = db.session.scalars(db_depts).all()
     return DeptSchema(many=True).dump(depts), 200
@@ -30,7 +30,7 @@ def show_depts():
 @jwt_required()
 @dept.route('/', methods=['POST'])
 def add_dept():
-    authorise()
+    authorise(None, True)
     new_dept = NewDeptSchema().load(request.json)
 
     dept = Dept(
@@ -52,7 +52,7 @@ def update_dept(id):
     dept = db.session.scalar(stmt)
 
     if dept:
-        authorise()
+        authorise(None, True)
         dept.name = update_info.get("name", dept.name)
 
         db.session.commit()
@@ -71,7 +71,7 @@ def delete_dept(id):
     dept = db.session.scalar(stmt)
 
     if dept:
-        authorise()
+        authorise(None, True)
         db.session.delete(dept)
         db.session.commit()
         return {}, 200

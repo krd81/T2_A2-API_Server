@@ -21,7 +21,7 @@ unauthorised_user
 @user.route('/')
 @jwt_required()
 def get_users():
-    authorise() #ADMIN only
+    authorise(None, True) #ADMIN only
     db_users = db.select(User)
     users = db.session.scalars(db_users).all()
     return UserSchema(exclude=["password"], many=True).dump(users), 200

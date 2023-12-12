@@ -19,7 +19,7 @@ admin_booking = Blueprint('admin_booking', __name__, url_prefix='/booking')
 @admin_booking.route('/')
 def get_bookings():
     try:
-        authorise()
+        authorise(None, True)
         db_bookings = db.select(Booking)
         bookings = db.session.scalars(db_bookings)
 
@@ -32,7 +32,7 @@ def get_bookings():
 @jwt_required()
 @admin_booking.route('/<int:id>') # /booking/booking_id [GET]
 def get_booking(id):
-    authorise()
+    authorise(None, True)
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
     
@@ -51,7 +51,7 @@ def get_booking(id):
 @jwt_required()
 @admin_booking.route('/<int:id>', methods=['PUT', 'PATCH'])
 def edit_booking(id):
-    authorise()
+    authorise(None, True)
     update_booking = BookingSchema().load(request.json)
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
@@ -74,14 +74,14 @@ def edit_booking(id):
             return {"message" : "Desk is unavailable - please try again"}, 409
     else:
         return {'message' : 'booking not found - please try again'}, 404
-
+ 
 
 
 # The DELETE route endpoint (delete existing)
 @jwt_required()
 @admin_booking.route('/<int:id>', methods=['DELETE'])
 def delete_booking(id):
-    authorise()
+    authorise(None, True)
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
 

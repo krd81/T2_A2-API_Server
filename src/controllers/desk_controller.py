@@ -21,7 +21,7 @@ unauthorised_user
 @jwt_required()
 @desk.route("/")
 def get_desks():
-    authorise()
+    authorise(None, True)
     db_desks = db.select(Desk)
     desks = db.session.scalars(db_desks)
 
@@ -32,7 +32,7 @@ def get_desks():
 @jwt_required()
 @desk.route("/<string:id>")
 def get_desk(id):
-    authorise()
+    authorise(None, True)
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
 
@@ -47,11 +47,12 @@ def get_desk(id):
 @jwt_required()
 @desk.route("/", methods=["POST"])
 def add_desk():
-    authorise()
+    authorise(None, True)
     new_desk = DeskSchema().load(request.json)
 
     desk = Desk(
-        id = new_desk["id"]
+        id = new_desk["id"],
+        available = new_desk["available"]
     )
 
     db.session.add(desk)
@@ -63,8 +64,8 @@ def add_desk():
 # The PUT route endpoint (edit desk)
 @jwt_required()
 @desk.route("/<string:id>", methods=["PUT", "PATCH"])
-def EDIT(id):
-    authorise()
+def edit_desk(id):
+    authorise(None, True)
     update_desk = DeskSchema().load(request.json)
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
@@ -82,7 +83,7 @@ def EDIT(id):
 @jwt_required()
 @desk.route("/<string:id>", methods=["DELETE"])
 def delete_desk(id):
-    authorise()
+    authorise(None, True)
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
 

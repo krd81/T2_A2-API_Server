@@ -5,8 +5,10 @@ from models.booking import *
 from models.user import *
 # from models.booking_date import * #???
 from flask_jwt_extended import jwt_required, create_access_token
+from flask_jwt_extended.exceptions import InvalidHeaderError
 from flask_bcrypt import Bcrypt
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
+from marshmallow.exceptions import ValidationError
 from datetime import date, timedelta
 
 # Some routes (ie: create new, edit, delete need to be accessed via the user controller)
@@ -67,8 +69,11 @@ def new_booking(employee_id):
     user = db.session.scalar(stmt)    
 
     if user: 
-        authorise(user.id)   
-        new_booking = BookingSchema().load(request.json)
+        authorise(user.id)
+        try:
+            new_booking = BookingSchema().load(request.json)
+        except ValidationError:
+            return {"message" : "Weekday must be one of 'mon', 'tue', 'wed', 'thu', 'fri'"}, 400
 
         booking = Booking (
             weekday = new_booking["weekday"],
@@ -79,14 +84,16 @@ def new_booking(employee_id):
 
         stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
         conflicting_booking = db.session.scalar(stmt)
-      
-        if not conflicting_booking:           
-            db.session.add(booking)
-            db.session.commit()
+        try:      
+            if not conflicting_booking or booking.desk_id.available:           
+                db.session.add(booking)
+                db.session.commit()
 
-            return BookingSchema().dump(booking), 201
-        else:
-            return {"message" : "Desk is unavailable - please try again"}, 409
+                return BookingSchema().dump(booking), 201
+            else:
+                return {"message" : "Desk is unavailable - please try again"}, 409
+        except (IntegrityError, DataError):
+            return {"message" : "Invalid input - please check and try again"}, 400
     else:
         return {"message" : "You are not authorised to access this resource"}, 401
 

@@ -15,7 +15,7 @@ class Dept(db.Model):
 
 
 class DeptSchema(ma.Schema):
-    name = fields.String(validate=OneOf(DEPARTMENTS))
+    name = fields.String(validate=OneOf(DEPARTMENTS, error = "Department entered was not recognised"))
     users = fields.Nested("UserSchema", many=True, only=["employee_id", "f_name", "l_name"])
 
     class Meta:

@@ -16,6 +16,7 @@ class Desk(db.Model):
 
 class DeskSchema(ma.Schema):
     bookings = fields.Nested("BookingSchema", many=True, exclude=["desk_id"])
+    
 
     class Meta:
         fields = ("id", "available", "bookings")

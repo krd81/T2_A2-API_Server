@@ -8,8 +8,8 @@ from controllers.booking_controller import booking
 from models.user import *
 from auth import authorise
 from flask_jwt_extended import jwt_required, create_access_token
-from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError
+from marshmallow.exceptions import ValidationError
 from datetime import date, timedelta
 
 
@@ -47,7 +47,11 @@ def get_user(id):
 # The POST route endpoint (user login)
 @user.route('/', methods=['POST'])
 def signin():
-    current_user = UserSchema().load(request.json)
+    try:
+        current_user = UserSchema().load(request.json)
+    except ValidationError:
+        return {"message" : "Ensure username and password has been entered"}, 400
+
 
     stmt = db.select(User).filter_by(employee_id=current_user['employee_id'])
     user = db.session.scalar(stmt)

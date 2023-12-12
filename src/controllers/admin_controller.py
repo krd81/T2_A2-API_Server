@@ -8,7 +8,8 @@ from auth import authorise
 from models.user import *
 from flask_jwt_extended import jwt_required, create_access_token
 from flask_bcrypt import Bcrypt
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
+from marshmallow.exceptions import ValidationError
 from datetime import date, timedelta
 
 
@@ -22,7 +23,10 @@ admin = Blueprint("admin", __name__, url_prefix="/admin")
 def create_user():
     try:
         authorise(None, True)
-        new_user = CreateUserSchema().load(request.json)                  
+        try:
+            new_user = CreateUserSchema().load(request.json)
+        except ValidationError:
+            return {"message" : "Ensure all User fields are present (password must be between 8 and 14 characters)"}, 400
         # Create new user
         user = User(
             employee_id = new_user["employee_id"],
@@ -40,8 +44,8 @@ def create_user():
         token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 100))
         # Return JWT / user   
         return {"token" : token, "user" : UserSchema(exclude=["password", "is_admin"]).dump(user)}, 201
-    except IntegrityError:
-        return {"error" : "Employee id is already registered"}, 409
+    except (IntegrityError, KeyError, DataError):
+        return {"error" : "Either employee id is already registered or there is an error with the department"}, 409
     
 
 # The PUT route endpoint (edit user details)

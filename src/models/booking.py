@@ -18,11 +18,11 @@ class Booking(db.Model):
     # booking_date_weekday = db.relationship("Date", back_populates = "weekday")
     date_created = db.Column(db.Date, default=datetime.now().strftime('%Y-%m-%d'))
 
-    desk_id = db.Column(db.String, db.ForeignKey("desks.id"), nullable=False)
+    desk_id = db.Column(db.String, db.ForeignKey("desks.id"), nullable=False) # Throw not null exception if desk with bookings is deleted
     desk = db.relationship("Desk", back_populates = "bookings")
 
-    user_id = db.Column(db.String, db.ForeignKey("users.employee_id"), nullable=False)
-    user = db.relationship("User", back_populates = "bookings")
+    user_id = db.Column(db.String, db.ForeignKey("users.employee_id", ondelete="set null"), nullable=False)
+    user = db.relationship("User", back_populates = "bookings", passive_deletes="all")
 
     week_id = db.Column(db.Integer, nullable=False)
     # booking_date_week = db.relationship("Date", back_populates = "week") 

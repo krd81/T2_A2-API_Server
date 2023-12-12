@@ -12,14 +12,14 @@ from sqlalchemy.exc import IntegrityError
 from datetime import date, timedelta
 
 
-desk = Blueprint('desk', __name__, url_prefix='/desk')
+desk = Blueprint("desk", __name__, url_prefix="/desk")
 unauthorised_user
 
 # ALL DESK ROUTES ARE ACCESSIBLE BY ADMIN ONLY
 
 # The GET route endpoint (show all)
 @jwt_required()
-@desk.route('/')
+@desk.route("/")
 def get_desks():
     authorise()
     db_desks = db.select(Desk)
@@ -30,7 +30,7 @@ def get_desks():
 
 # The GET route endpoint (show desk)
 @jwt_required()
-@desk.route('/<string:id>')
+@desk.route("/<string:id>")
 def get_desk(id):
     authorise()
     stmt = db.select(Desk).filter_by(id=id)
@@ -39,13 +39,13 @@ def get_desk(id):
     if desk:
         return DeskSchema().dump(desk), 200        
     else:
-        return {'message' : 'desk not found - please try again'}, 404
+        return {"message" : "desk not found - please try again"}, 404
 
 
 
 # The POST route endpoint (create new)
 @jwt_required()
-@desk.route('/', methods=['POST'])
+@desk.route("/", methods=["POST"])
 def add_desk():
     authorise()
     new_desk = DeskSchema().load(request.json)
@@ -62,7 +62,7 @@ def add_desk():
 
 # The PUT route endpoint (edit desk)
 @jwt_required()
-@desk.route('/<string:id>', methods=['PUT', 'PATCH'])
+@desk.route("/<string:id>", methods=["PUT", "PATCH"])
 def EDIT(id):
     authorise()
     update_desk = DeskSchema().load(request.json)
@@ -75,23 +75,26 @@ def EDIT(id):
         db.session.commit()
         return DeskSchema().dump(desk), 200
     else:
-        return {'message' : 'desk not found - please try again'}, 404
+        return {"message" : "desk not found - please try again"}, 404
 
 
 # The DELETE route endpoint (delete existing)
 @jwt_required()
-@desk.route('/<string:id>', methods=['DELETE'])
+@desk.route("/<string:id>", methods=["DELETE"])
 def delete_desk(id):
     authorise()
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
 
     if desk:
-        db.session.delete(desk)
-        db.session.commit()
-        return {}, 200
+        try:
+            db.session.delete(desk)
+            db.session.commit()
+            return {}, 200
+        except IntegrityError:
+            return {"message" : "There are bookings associated with this desk, therefore it cannot be deleted"}, 405
     else:
-        return {'message' : 'desk not found - please try again'}, 404
+        return {"message" : "desk not found - please try again"}, 404
 
 
 

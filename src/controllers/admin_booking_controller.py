@@ -56,14 +56,22 @@ def edit_booking(id):
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
 
+
     if booking:
         booking.weekday = update_booking.get("weekday", booking.weekday)
         booking.desk_id = update_booking.get("desk_id", booking.desk_id)
         booking.user_id = update_booking.get("user_id", booking.user_id)
         booking.week_id = update_booking.get("week_id", booking.week_id)
 
-        db.session.commit()
-        return BookingSchema().dump(booking), 200
+
+        db_lookup = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
+        conflicting_booking = db.session.scalar(db_lookup)
+        
+        if not conflicting_booking or conflicting_booking.id == id:
+            db.session.commit()
+            return BookingSchema().dump(booking), 200
+        else:
+            return {"message" : "Desk is unavailable - please try again"}, 409
     else:
         return {'message' : 'booking not found - please try again'}, 404
 

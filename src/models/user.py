@@ -13,16 +13,17 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-    dept_id =  db.Column(db.Integer, db.ForeignKey("departments.id"), nullable=False)
+    dept_id =  db.Column(db.Integer, db.ForeignKey("departments.id", onupdate="cascade", ondelete="set null"), nullable=True)
     dept = db.relationship("Dept", back_populates = "users")
 
+    # bookings = db.relationship("Booking", back_populates = "user", cascade= "all, delete")
     bookings = db.relationship("Booking", back_populates = "user")
 
 
 
 
 class UserSchema(ma.Schema):
-    dept = fields.Nested("DeptSchema", only=["name"])
+    dept = fields.Nested("DeptSchema", only=["id", "name"])
     bookings = fields.Nested("BookingSchema", many=True, only=["id", "desk_id", "week_id", "weekday"])
     # f_name = fields.String(required=True)
     # l_name = fields.String(required=True)
@@ -32,7 +33,7 @@ class UserSchema(ma.Schema):
                 # Length(max=14, error='Password must be between 8 and 14 characters')))
 
     class Meta:
-        fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")
+        fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept", "dept_id","bookings")
 
 
 class CreateUserSchema(ma.Schema):

@@ -64,8 +64,7 @@ def get_booking(employee_id, id):
 @booking.route('/', methods=['POST']) # /user_id/booking [POST]
 def new_booking(employee_id):
     stmt = db.select(User).filter_by(employee_id=employee_id)
-    user = db.session.scalar(stmt)
-    
+    user = db.session.scalar(stmt)    
 
     if user: 
         authorise(user.id)   
@@ -78,9 +77,7 @@ def new_booking(employee_id):
             week_id = new_booking["week_id"]            
         )
 
-        # booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday)
         stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
-        # stmt = db.select(Booking).filter_by(booking_ref=booking.booking_ref)
         conflicting_booking = db.session.scalar(stmt)
       
         if not conflicting_booking:           
@@ -97,7 +94,6 @@ def new_booking(employee_id):
 
 
 # The PUT route endpoint (edit existing) # /user_id/booking/booking_id [PUT]
-# EDIT route needs to check for conflicts as per create!
 @jwt_required()
 @booking.route('/<int:id>', methods=['PUT', 'PATCH'])
 def edit_booking(employee_id, id):
@@ -116,8 +112,14 @@ def edit_booking(employee_id, id):
             booking.desk_id = update_booking.get("desk_id", booking.desk_id),
             booking.week_id = update_booking.get("week_id", booking.week_id)
 
-            db.session.commit()
-            return BookingSchema().dump(booking), 200
+            stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
+            conflicting_booking = db.session.scalar(stmt)
+
+            if not conflicting_booking or conflicting_booking.id == id:       
+                db.session.commit()
+                return BookingSchema().dump(booking), 200
+            else:
+                return {"message" : "Desk is unavailable - please try again"}, 409
         else:
             return {'message' : 'booking not found - please try again'}, 404  
     else:

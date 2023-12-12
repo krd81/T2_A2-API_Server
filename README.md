@@ -20,6 +20,7 @@ Endpoints (not every entity needs to have full CRUD endpoints)
 
 ## R6
 ERD
+[ERD](ERD_ver1.png)
 
 
 

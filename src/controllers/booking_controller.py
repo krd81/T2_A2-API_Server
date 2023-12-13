@@ -14,7 +14,7 @@ from marshmallow.exceptions import ValidationError
 
 booking = Blueprint("booking", __name__, url_prefix="/<string:employee_id>/booking")
 
-   
+
 
 # The GET route endpoint (show all for individual user)
 @jwt_required()
@@ -24,10 +24,10 @@ def get_bookings(employee_id):
     user = db.session.scalar(stmt)
 
     try:
-        authorise(user.id)        
-    
+        authorise(user.id)
+
         stmt = db.select(Booking).filter_by(user_id=employee_id)
-        bookings = db.session.scalars(stmt)    
+        bookings = db.session.scalars(stmt)
 
         return BookingSchema(many=True).dump(bookings), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
@@ -42,42 +42,42 @@ def get_booking(employee_id, id):
     user = db.session.scalar(stmt)
 
     try:
-        if user: 
-            authorise(user.id)   
+        if user:
+            authorise(user.id)
             stmt = db.select(Booking).filter_by(user_id=employee_id, id=id)
             booking = db.session.scalar(stmt)
-            
+
             if booking:
                 return BookingSchema().dump(booking), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
         return {"message" : "User and/or booking not found"}, 400
-            
+
 
 # The POST route endpoint (create new)
 @jwt_required()
 @booking.route("/", methods=["POST"]) # /user_id/booking [POST]
 def new_booking(employee_id):
     stmt = db.select(User).filter_by(employee_id=employee_id)
-    user = db.session.scalar(stmt)    
+    user = db.session.scalar(stmt)
 
-    if user: 
+    if user:
         authorise(user.id)
         try:
             new_booking = BookingSchema().load(request.json)
         except ValidationError:
-            return {"message" : "Weekday must be one of 'mon', 'tue', 'wed', 'thu', 'fri'"}, 400    
-        
+            return {"message" : "Weekday must be one of 'mon', 'tue', 'wed', 'thu', 'fri'"}, 400
+
         booking = Booking (
             weekday = new_booking["weekday"],
             desk_id = new_booking["desk_id"],
             user_id = employee_id,
-            week_id = new_booking["week_id"]            
+            week_id = new_booking["week_id"]
         )
 
         stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
         conflicting_booking = db.session.scalar(stmt)
-        try:      
-            if not conflicting_booking or booking.desk_id.available:           
+        try:
+            if not conflicting_booking or booking.desk_id.available:
                 db.session.add(booking)
                 db.session.commit()
 
@@ -99,14 +99,14 @@ def edit_booking(employee_id, id):
     stmt = db.select(User).filter_by(employee_id=employee_id)
     user = db.session.scalar(stmt)
 
-    if user: 
-        authorise(user.id)   
+    if user:
+        authorise(user.id)
 
         try:
             update_booking = BookingSchema().load(request.json)
         except ValidationError:
             return {"message" : "Check booking details entered"}
-        
+
         stmt = db.select(Booking).filter_by(user_id=employee_id, id=id)
         booking = db.session.scalar(stmt)
 
@@ -119,25 +119,25 @@ def edit_booking(employee_id, id):
                 stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
                 conflicting_booking = db.session.scalar(stmt)
 
-                if not conflicting_booking or conflicting_booking.id == id:       
+                if not conflicting_booking or conflicting_booking.id == id:
                     db.session.commit()
                     return BookingSchema().dump(booking), 200
                 else:
                     return {"message" : "Desk is unavailable - please try a different desk/time"}, 409
         except (TypeError, AttributeError, IntegrityError, DataError):
-            return {"message" : "User and/or booking not found"}, 404  
+            return {"message" : "User and/or booking not found"}, 404
 
 
-# The DELETE route endpoint (delete existing) 
-@jwt_required()
+# The DELETE route endpoint (delete existing)
+# @jwt_required()
 @booking.route("/<int:id>", methods=["DELETE"])
 def delete_booking(employee_id, id):
     stmt = db.select(User).filter_by(employee_id=employee_id)
     user = db.session.scalar(stmt)
 
     try:
-        if user: 
-            authorise(user.id)   
+        if user:
+            authorise(user.id)
 
             stmt = db.select(Booking).filter_by(user_id=employee_id, id=id)
             booking = db.session.scalar(stmt)
@@ -153,19 +153,29 @@ def delete_booking(employee_id, id):
 
 
 
-"""
-# The DELETE route endpoint (delete ALL) 
+
+# The DELETE route endpoint (delete ALL)
+@jwt_required()
 @booking.route("/", methods=["DELETE"])
 def delete_bookings(employee_id):
-    # stmt = db.select(Booking).filter_by(user_id=employee_id)
-    # bookings = db.session.scalars(stmt)
-    bookings = db.select(Booking).where(Booking.user_id == employee_id)
-    db.session.delete(bookings)
-    # if bookings:
-        # delete(Booking).where(user_id == employee_id)
-        # db.session.delete(bookings)
-    db.session.commit()
-    return {}, 200
-    # else:
-        # return {"message" : "no bookings not found - please try again"}, 404        
-"""
+    stmt = db.select(User).filter_by(employee_id=employee_id)
+    user = db.session.scalar(stmt)
+
+    try:
+        if user:
+            authorise(user.id)
+
+            stmt = None
+            stmt = db.select(Booking)
+            bookings = db.session.scalars(stmt)
+
+
+            for booking in bookings:
+                if booking.user_id == employee_id:
+                    db.session.delete(booking)
+
+            db.session.commit()
+            return {}, 200
+    except (TypeError, AttributeError, IntegrityError, DataError):
+        return {"message" : "No bookings found"}, 404
+

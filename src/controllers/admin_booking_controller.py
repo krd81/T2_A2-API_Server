@@ -10,7 +10,7 @@ from sqlalchemy.exc import IntegrityError, DataError
 
 
 admin_booking = Blueprint("admin_booking", __name__, url_prefix="/booking")
-# unauthorised_user() 
+
 
 # The GET route endpoint (show all)
 @jwt_required()
@@ -33,7 +33,7 @@ def get_booking(id):
     authorise(None, True)
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
-    
+
     try:
         if booking:
             return BookingSchema().dump(booking), 200
@@ -46,7 +46,7 @@ def get_booking(id):
 
 
 
-# The PUT route endpoint (edit existing) 
+# The PUT route endpoint (edit existing)
 @jwt_required()
 @admin_booking.route("/<int:id>", methods=["PUT", "PATCH"])
 def edit_booking(id):
@@ -65,7 +65,7 @@ def edit_booking(id):
 
             db_lookup = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
             conflicting_booking = db.session.scalar(db_lookup)
-            
+
             if not conflicting_booking or conflicting_booking.id == id:
                 db.session.commit()
                 return BookingSchema().dump(booking), 200
@@ -73,7 +73,7 @@ def edit_booking(id):
                 return {"message" : "Desk is unavailable - please try again"}, 409
     except (TypeError, AttributeError, IntegrityError, DataError):
         return {"message" : "Booking not found - please try again"}, 404
- 
+
 
 
 # The DELETE route endpoint (delete existing)
@@ -85,12 +85,12 @@ def delete_booking(id):
     booking = db.session.scalar(stmt)
 
     try:
-        if booking:
+        # if booking:
             db.session.delete(booking)
             db.session.commit()
             return {}, 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-       return {"message" : "booking not found - please try again"}, 404 
+       return {"message" : "booking not found - please try again"}, 404
 
 
 

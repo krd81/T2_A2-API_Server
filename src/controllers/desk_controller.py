@@ -1,20 +1,15 @@
 from flask import Blueprint, request
-from app import db, unauthorised_user, bcrypt
+from app import db
 from auth import authorise
-# from models.booking import *
-# from models.booking_date import *
-# from models.dept import *
 from models.desk import *
-# from models.user import *
-from flask_jwt_extended import jwt_required, create_access_token
-from flask_bcrypt import Bcrypt
+from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import IntegrityError, DataError
 from marshmallow.exceptions import ValidationError
-from datetime import date, timedelta
+
 
 
 desk = Blueprint("desk", __name__, url_prefix="/desk")
-# unauthorised_user
+
 
 # ALL DESK ROUTES ARE ACCESSIBLE BY ADMIN ONLY
 
@@ -38,7 +33,7 @@ def get_desk(id):
     desk = db.session.scalar(stmt)
 
     if desk:
-        return DeskSchema().dump(desk), 200        
+        return DeskSchema().dump(desk), 200
     else:
         return {"message" : "desk not found - please try again"}, 404
 
@@ -65,8 +60,6 @@ def create_desk():
         return DeskSchema().dump(desk), 201
     except (IntegrityError, KeyError, DataError):
         return {"error" : "Check if new desk id entered already exists"}, 409
-
-
 
 
 
@@ -119,13 +112,13 @@ def get_desk(desk_id=None , activity=""):
     authorise(None, True)
     desk_info = DeskSchema().load(request.json)
 
-    if not desk_id == None :        
+    if not desk_id == None :
         stmt = db.select(Desk).filter_by(id=desk_id)
         desk = db.session.scalar(stmt)
         if desk:
             if activity == "delete":
                 return desk
-            elif activity == "update":            
+            elif activity == "update":
                 desk.id = desk_info.get("id", desk.id)
                 desk.available = desk_info.get("available", desk.available)
                 return desk

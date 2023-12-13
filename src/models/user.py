@@ -1,6 +1,6 @@
 from app import db, ma
 from marshmallow import fields
-from marshmallow.validate import OneOf, Regexp, And, Length
+from marshmallow.validate import And, Length
 
 class User(db.Model):
     __tablename__ = "users"
@@ -36,7 +36,8 @@ class UserSchema(ma.Schema):
 
 
 class CreateUserSchema(ma.Schema):
-    dept = fields.Nested("DeptSchema", only=["name"])
+    dept = fields.Nested("DeptSchema")
+    dept_id = fields.Integer(required=True)
     bookings = fields.Nested("BookingSchema", only=["id"])
     f_name = fields.String(required=True)
     l_name = fields.String(required=True)

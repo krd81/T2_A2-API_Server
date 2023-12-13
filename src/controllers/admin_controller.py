@@ -1,16 +1,11 @@
 from flask import Blueprint, request
-from app import db, unauthorised_user, bcrypt
+from app import db, bcrypt
 from auth import authorise
-# from models.booking import *
-# from models.booking_date import *
-# from models.dept import *
-# from models.desk import *
 from models.user import *
 from flask_jwt_extended import jwt_required, create_access_token
-from flask_bcrypt import Bcrypt
 from sqlalchemy.exc import IntegrityError, DataError
 from marshmallow.exceptions import ValidationError
-from datetime import date, timedelta
+from datetime import timedelta
 
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")

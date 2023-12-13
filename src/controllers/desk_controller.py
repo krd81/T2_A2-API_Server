@@ -63,6 +63,8 @@ def create_desk():
 
 
 
+
+
 # The PUT route endpoint (edit desk)
 @jwt_required()
 @desk.route("/<string:id>", methods=["PUT", "PATCH"])

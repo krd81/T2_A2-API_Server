@@ -14,8 +14,8 @@ user.register_blueprint(booking)
 
 
 # The GET route endpoint (show all)
-@user.route("/")
 @jwt_required()
+@user.route("/")
 def get_users():
     authorise(None, True) #ADMIN only
     db_users = db.select(User)
@@ -28,13 +28,14 @@ def get_users():
 @jwt_required()
 @user.route("/<string:id>")
 def get_user(id):
-    stmt = db.select(User).filter_by(employee_id=id)
-    user = db.session.scalar(stmt)
+    try:
+        stmt = db.select(User).filter_by(employee_id=id)
+        user = db.session.scalar(stmt)
 
-    if user:
-        authorise(user.id)
-        return UserSchema(exclude=["password"]).dump(user), 200
-    else:
+        if user:
+            authorise(user.id)
+            return UserSchema(exclude=["password"]).dump(user), 200
+    except (TypeError, AttributeError, IntegrityError, DataError):
         return {"message" : "user not found - please try again"}, 404
 
 
@@ -46,17 +47,18 @@ def signin():
     try:
         current_user = UserSchema().load(request.json)
     except ValidationError:
-        return {"message" : "Ensure username and password has been entered"}, 400
+        return {"message" : "Ensure employee id and password has been entered"}, 400
 
 
     stmt = db.select(User).filter_by(employee_id=current_user["employee_id"])
     user = db.session.scalar(stmt)
 
-    if user and bcrypt.check_password_hash(user.password, current_user["password"]):
-        token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 100))
-        return {"token" : token, "user" : UserSchema(exclude=["password", "is_admin"]).dump(user)}, 201
-    else:
-        return {"error" : "Username or password is incorrect"}, 409
+    try:
+        if user and bcrypt.check_password_hash(user.password, current_user["password"]):
+            token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 100))
+            return {"token" : token, "user" : UserSchema(exclude=["password", "is_admin"]).dump(user)}, 200
+    except (TypeError, AttributeError, IntegrityError, DataError):
+        return {"error" : "Employee id or password is incorrect"}, 409
 
 
 

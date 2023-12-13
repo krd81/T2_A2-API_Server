@@ -24,7 +24,7 @@ def db_seed():
     dates_json = []
     dates = []
 
-    with open ('./client_specs/dates_2024.json') as f:
+    with open ("./client_specs/dates_2024.json") as f:
         dates_json = json.load(f)
 
     for date in dates_json:
@@ -71,7 +71,7 @@ def db_seed():
             f_name = "Kathy",
             l_name = "Morrison",
             email = "kathy.morrison@company.com",
-            password = bcrypt.generate_password_hash('candle12').decode('utf8'),
+            password = bcrypt.generate_password_hash("candle12").decode("utf8"),
             is_admin = True,
             dept_id = depts[6].id
         ),
@@ -80,7 +80,7 @@ def db_seed():
             f_name = "Richard",
             l_name = "Lawson",
             email = "richard.lawson@company.com",
-            password = bcrypt.generate_password_hash('dancing22').decode('utf8'),
+            password = bcrypt.generate_password_hash("dancing22").decode("utf8"),
 
             dept_id = depts[0].id
         ),
@@ -89,7 +89,7 @@ def db_seed():
             f_name = "Hannah",
             l_name = "Fisher",
             email = "hannah.fisher@company.com",
-            password = bcrypt.generate_password_hash('unicorn55').decode('utf8'),
+            password = bcrypt.generate_password_hash("unicorn55").decode("utf8"),
 
             dept_id = depts[2].id
         ),
@@ -98,7 +98,7 @@ def db_seed():
             f_name = "Craig",
             l_name = "Stevenson",
             email = "craig.stevenson@company.com",
-            password = bcrypt.generate_password_hash('cricket07').decode('utf8'),
+            password = bcrypt.generate_password_hash("cricket07").decode("utf8"),
             dept_id = depts[1].id
         ),
     ]

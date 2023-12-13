@@ -1,24 +1,20 @@
 from flask import Blueprint, request
-from app import db, unauthorised_user, bcrypt
+from app import db, bcrypt
 from controllers.booking_controller import booking
-# from models.booking import *
-# from models.booking_date import *
-# from models.dept import *
-# from models.desk import *
 from models.user import *
 from auth import authorise
 from flask_jwt_extended import jwt_required, create_access_token
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, DataError
 from marshmallow.exceptions import ValidationError
-from datetime import date, timedelta
+from datetime import timedelta
 
 
-user = Blueprint('user', __name__, url_prefix='/user')
+user = Blueprint("user", __name__, url_prefix="/user")
 user.register_blueprint(booking)
-unauthorised_user
+
 
 # The GET route endpoint (show all)
-@user.route('/')
+@user.route("/")
 @jwt_required()
 def get_users():
     authorise(None, True) #ADMIN only
@@ -30,7 +26,7 @@ def get_users():
 # The GET route endpoint (show user)
 # Can only see themselves (Admin can see all)
 @jwt_required()
-@user.route('/<string:id>')
+@user.route("/<string:id>")
 def get_user(id):
     stmt = db.select(User).filter_by(employee_id=id)
     user = db.session.scalar(stmt)
@@ -39,13 +35,13 @@ def get_user(id):
         authorise(user.id)
         return UserSchema(exclude=["password"]).dump(user), 200
     else:
-        return {'message' : 'user not found - please try again'}, 404
+        return {"message" : "user not found - please try again"}, 404
 
 
 
 
 # The POST route endpoint (user login)
-@user.route('/', methods=['POST'])
+@user.route("/", methods=["POST"])
 def signin():
     try:
         current_user = UserSchema().load(request.json)
@@ -53,31 +49,34 @@ def signin():
         return {"message" : "Ensure username and password has been entered"}, 400
 
 
-    stmt = db.select(User).filter_by(employee_id=current_user['employee_id'])
+    stmt = db.select(User).filter_by(employee_id=current_user["employee_id"])
     user = db.session.scalar(stmt)
 
-    if user and bcrypt.check_password_hash(user.password, current_user['password']):
-        token = create_access_token(identity=user.id, additional_claims={'id': user.id}, expires_delta = timedelta(hours = 100))
-        return {'token' : token, 'user' : UserSchema(exclude=['password', 'is_admin']).dump(user)}, 201
+    if user and bcrypt.check_password_hash(user.password, current_user["password"]):
+        token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 100))
+        return {"token" : token, "user" : UserSchema(exclude=["password", "is_admin"]).dump(user)}, 201
     else:
-        return {'error' : 'Username or password is incorrect'}, 409
+        return {"error" : "Username or password is incorrect"}, 409
 
 
 
 # The PUT route endpoint (edit existing user: PASSWORD ONLY)
-@user.route('/<string:id>', methods=['PUT', 'PATCH'])
+@user.route("/<string:id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def change_password(id):
-    
-    update_user = UserSchema().load(request.json)
-    stmt = db.select(User).filter_by(employee_id=id)
-    user = db.session.scalar(stmt)
+    try:
+        update_user = UserSchemaPassword().load(request.json)
+        stmt = db.select(User).filter_by(employee_id=id)
+        user = db.session.scalar(stmt)
+    except ValidationError:
+        return {"message" : "Ensure a new password, between 8 and 12 characters has been entered"}, 400
 
-    if user:
-        authorise(user.id)
-        user.password = bcrypt.generate_password_hash(update_user.get("password", user.password)).decode("utf8")
-        db.session.commit()
-        return UserSchema(exclude=["password"]).dump(user), 200
-    else:
-        return {'message' : 'user not found - please try again'}, 404
+    try:
+        if user:
+            authorise(user.id)
+            user.password = bcrypt.generate_password_hash(update_user.get("password", user.password)).decode("utf8")
+            db.session.commit()
+            return UserSchema(exclude=["password"]).dump(user), 200
+    except (TypeError, AttributeError, IntegrityError, DataError):
+        return {"message" : "User not found"}, 404
 

@@ -1,7 +1,7 @@
 from app import db, ma
 from marshmallow import fields
-from marshmallow.validate import OneOf, Regexp, And, Length
-from client_specs.company_x import DEPARTMENTS
+# from marshmallow.validate import OneOf, Regexp, And, Length
+# from client_specs.company_x import DEPARTMENTS
 
 class Dept(db.Model):
     __tablename__ = "departments"
@@ -15,13 +15,14 @@ class Dept(db.Model):
 
 
 class DeptSchema(ma.Schema):
-    name = fields.String(validate=OneOf(DEPARTMENTS, error = "Department entered was not recognised"))
+    name = fields.String(required=True)
     users = fields.Nested("UserSchema", many=True, only=["employee_id", "f_name", "l_name"])
 
     class Meta:
         fields = ("id", "name", "users")
 
-
-class NewDeptSchema(ma.Schema):
-    class Meta:
-        fields = ("id", "name")
+# # Required to allow the creation of a new department 
+# class NewDeptSchema(ma.Schema):
+#     name = fields.String(required=True)
+#     class Meta:
+#         fields = ("id", "name")

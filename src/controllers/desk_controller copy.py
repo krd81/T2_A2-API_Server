@@ -14,7 +14,7 @@ from datetime import date, timedelta
 
 
 desk = Blueprint("desk", __name__, url_prefix="/desk")
-# unauthorised_user
+unauthorised_user
 
 # ALL DESK ROUTES ARE ACCESSIBLE BY ADMIN ONLY
 
@@ -64,7 +64,7 @@ def create_desk():
         db.session.commit()
         return DeskSchema().dump(desk), 201
     except (IntegrityError, KeyError, DataError):
-        return {"error" : "Check if new desk id entered already exists"}, 409
+        return {"error" : "Either employee id is already registered or there is an error with the department"}, 409
 
 
 
@@ -75,23 +75,17 @@ def create_desk():
 @desk.route("/<string:id>", methods=["PUT", "PATCH"])
 def edit_desk(id):
     authorise(None, True)
-    try:
-        update_desk = DeskSchema().load(request.json)
-    except ValidationError:
-        return {"message" : "Ensure desk_id has been entered"}
+    update_desk = DeskSchema().load(request.json)
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
 
-    try:
-        if desk:
-            desk.id = update_desk.get("id", desk.id)
-            desk.available = update_desk.get("available", desk.available)
-            db.session.commit()
-            return DeskSchema().dump(desk), 200
-        else:
-            return {"message" : "desk not found - please try again"}, 404
-    except (IntegrityError, KeyError, DataError):
-        return {"error" : "Check if new desk id entered already exists"}, 409
+    if desk:
+        desk.id = update_desk.get("id", desk.id)
+        desk.available = update_desk.get("available", desk.available)
+        db.session.commit()
+        return DeskSchema().dump(desk), 200
+    else:
+        return {"message" : "desk not found - please try again"}, 404
 
 
 # The DELETE route endpoint (delete existing)
@@ -99,7 +93,7 @@ def edit_desk(id):
 @desk.route("/<string:id>", methods=["DELETE"])
 def delete_desk(id):
     authorise(None, True)
-
+    get_desk(id, "delete")
     stmt = db.select(Desk).filter_by(id=id)
     desk = db.session.scalar(stmt)
 
@@ -114,7 +108,7 @@ def delete_desk(id):
         return {"message" : "desk not found - please try again"}, 404
 
 
-'''
+
 def get_desk(desk_id=None , activity=""):
     authorise(None, True)
     desk_info = DeskSchema().load(request.json)
@@ -136,7 +130,7 @@ def get_desk(desk_id=None , activity=""):
                 available = desk_info["available"]
             )
             return new_desk
-'''
+
 
 
 

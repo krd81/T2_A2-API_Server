@@ -26,6 +26,7 @@ def create_app():
 
     for controller in registerable_controllers:
         app.register_blueprint(controller)
+
     
     print(app.url_map)
 

@@ -52,25 +52,34 @@ def create_user():
 @jwt_required()
 @admin.route("/<string:id>", methods=["PUT", "PATCH"])
 def edit_user(id):
-    update_user = UserSchema().load(request.json)
-    stmt = db.select(User).filter_by(employee_id=id)
-    user = db.session.scalar(stmt)
+    try:
+        update_user = UserSchema().load(request.json)
+    except ValidationError:
+        return {"message" : "Ensure email/password fields, if entered, contain valid data)"}, 400
+    if len(update_user) > 0:
+        stmt = db.select(User).filter_by(employee_id=id)
+        user = db.session.scalar(stmt)
 
-    if user:
-        authorise(None, True)
-        user.employee_id = update_user.get("employee_id", user.employee_id)
-        user.f_name = update_user.get("f_name", user.f_name)
-        user.l_name = update_user.get("l_name", user.l_name)
-        user.email = update_user.get("email", user.email)
-        user.password = update_user.get("password", user.password)
-        user.dept_id = update_user.get("dept_id", user.dept_id)   
-        user.is_admin = update_user.get("is_admin", user.is_admin)     
-        
-        db.session.commit()
+        try:
+            if user:
+                authorise(None, True)
+                user.employee_id = update_user.get("employee_id", user.employee_id)
+                user.f_name = update_user.get("f_name", user.f_name)
+                user.l_name = update_user.get("l_name", user.l_name)
+                user.email = update_user.get("email", user.email)
+                user.password = update_user.get("password", user.password)
+                user.dept_id = update_user.get("dept_id", user.dept_id)   
+                user.is_admin = update_user.get("is_admin", user.is_admin)     
+                
+                db.session.commit()
 
-        return UserSchema(exclude=["password"]).dump(user), 200
+                return UserSchema(exclude=["password"]).dump(user), 200
+            else:
+                return {"message" : "user not found - please try again"}, 404
+        except (IntegrityError, KeyError, DataError):
+            return {"error" : "Either employee id is already registered or there is an error with the department"}, 409
     else:
-        return {"message" : "user not found - please try again"}, 404
+        return {"message" : "User not updated as no details were entered"}
 
 
 

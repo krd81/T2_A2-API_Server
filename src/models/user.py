@@ -26,12 +26,10 @@ class User(db.Model):
 class UserSchema(ma.Schema):
     dept = fields.Nested("DeptSchema", only=["id", "name"])
     bookings = fields.Nested("BookingSchema", many=True, only=["id", "desk_id", "week_id", "weekday"])
-    # f_name = fields.String(required=True)
-    # l_name = fields.String(required=True)
-    # email = fields.Email(required=True)
-    # password = fields.String(required=True, 
-                # validate=And(Length(min=8, error='Password must be between 8 and 14 characters'), 
-                # Length(max=14, error='Password must be between 8 and 14 characters')))
+    email = fields.Email()
+    password = fields.String(validate=And(Length(min=8, error='Password must be between 8 and 14 characters'), 
+                Length(max=14, error='Password must be between 8 and 14 characters')))
+
 
     class Meta:
         fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept", "dept_id","bookings")
@@ -49,4 +47,13 @@ class CreateUserSchema(ma.Schema):
 
     class Meta:
         fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")
+
+class UserSchemaPassword(ma.Schema):
+    password = fields.String(required=True, 
+                validate=And(Length(min=8, error='Password must be between 8 and 14 characters'), 
+                Length(max=14, error='Password must be between 8 and 14 characters')))
+
+    class Meta:
+        fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")
+
 

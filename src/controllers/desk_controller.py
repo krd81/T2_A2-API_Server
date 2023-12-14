@@ -35,7 +35,7 @@ def get_desk(id):
     if desk:
         return DeskSchema().dump(desk), 200
     else:
-        return {"message" : "desk not found - please try again"}, 404
+        return {"message" : "desk not found"}, 404
 
 
 
@@ -84,7 +84,7 @@ def edit_desk(id):
             db.session.commit()
             return DeskSchema().dump(desk), 200
         else:
-            return {"message" : "desk not found - please try again"}, 404
+            return {"message" : "desk not found"}, 404
     except (IntegrityError, KeyError, DataError):
         return {"error" : "Check if new desk id entered already exists"}, 409
 
@@ -106,7 +106,7 @@ def delete_desk(id):
         except IntegrityError:
             return {"message" : "There are bookings associated with this desk, therefore it cannot be deleted"}, 405
     else:
-        return {"message" : "desk not found - please try again"}, 404
+        return {"message" : "desk not found"}, 404
 
 
 '''

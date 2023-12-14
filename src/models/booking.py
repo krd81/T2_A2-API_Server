@@ -10,7 +10,7 @@ class Booking(db.Model):
     __tablename__ = "bookings"
 
     id = db.Column(db.Integer, primary_key=True)
-    weekday = db.Column(db.String(3), nullable=False)
+    weekday = db.Column(db.String(3), nullable=False) # Day of the week the booking is for
     date_created = db.Column(db.Date, default=datetime.now().strftime('%Y-%m-%d'))
 
     desk_id = db.Column(db.String, db.ForeignKey("desks.id"), onupdate="cascade", nullable=False)

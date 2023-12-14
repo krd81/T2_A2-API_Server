@@ -49,10 +49,12 @@ class CreateUserSchema(ma.Schema):
     class Meta:
         fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")
 
+
 class UserSchemaPassword(ma.Schema):
     password = fields.String(required=True, 
                 validate=And(Length(min=8, error='Password must be between 8 and 14 characters'), 
                 Length(max=14, error='Password must be between 8 and 14 characters')))
+
 
     class Meta:
         fields = ("id", "employee_id", "f_name", "l_name", "email", "password", "is_admin", "dept_id", "bookings")

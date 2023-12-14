@@ -31,7 +31,7 @@ def get_bookings(employee_id):
 
         return BookingSchema(many=True).dump(bookings), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "User not found"}, 400
+        return {"message" : "User not found"}, 404
 
 
 # The GET route endpoint (show booking)
@@ -50,7 +50,7 @@ def get_booking(employee_id, id):
             if booking:
                 return BookingSchema().dump(booking), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "User and/or booking not found"}, 400
+        return {"message" : "User and/or booking not found"}, 404
 
 
 # The POST route endpoint (create new)
@@ -83,9 +83,9 @@ def new_booking(employee_id):
 
                 return BookingSchema().dump(booking), 201
             else:
-                return {"message" : "Desk is unavailable - please try again"}, 409
+                return {"message" : "Desk is unavailable"}, 400
         except (IntegrityError, DataError):
-            return {"message" : "Invalid input - please check and try again"}, 400
+            return {"message" : "Invalid input"}, 400
     else:
         return {"message" : "You are not authorised to access this resource"}, 401
 

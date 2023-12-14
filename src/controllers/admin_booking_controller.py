@@ -38,7 +38,7 @@ def get_booking(id):
         if booking:
             return BookingSchema().dump(booking), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "booking not found - please try again"}, 404
+        return {"message" : "booking not found"}, 404
 
 
 
@@ -70,9 +70,9 @@ def edit_booking(id):
                 db.session.commit()
                 return BookingSchema().dump(booking), 200
             else:
-                return {"message" : "Desk is unavailable - please try again"}, 409
+                return {"message" : "Desk is unavailable"}, 409
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "Booking not found - please try again"}, 404
+        return {"message" : "Booking not found"}, 404
 
 
 
@@ -89,7 +89,7 @@ def delete_booking(id):
             db.session.commit()
             return {}, 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-       return {"message" : "booking not found - please try again"}, 404
+       return {"message" : "booking not found"}, 404
 
 
 

@@ -59,7 +59,7 @@ def update_dept(id):
             db.session.commit()
             return DeptSchema().dump(dept), 200
         else:
-            return {"message" : "department not found - please try again"}, 404
+            return {"message" : "department not found"}, 404
     else:
         return {"message" : "Dept not updated as no details were entered"}
 
@@ -80,4 +80,4 @@ def delete_dept(id):
         db.session.commit()
         return {}, 200
     else:
-        return {"message" : "department not found - please try again"}, 404
+        return {"message" : "department not found"}, 404

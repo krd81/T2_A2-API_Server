@@ -36,7 +36,7 @@ def get_user(id):
             authorise(user.id)
             return UserSchema(exclude=["password"]).dump(user), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "user not found - please try again"}, 404
+        return {"message" : "user not found"}, 404
 
 
 

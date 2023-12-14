@@ -70,7 +70,7 @@ def edit_user(id):
 
                 return UserSchema(exclude=["password"]).dump(user), 200
             else:
-                return {"message" : "user not found - please try again"}, 404
+                return {"message" : "user not found"}, 404
         except (IntegrityError, KeyError, DataError):
             return {"error" : "Either employee id is already registered or there is an error with the department"}, 409
     else:
@@ -92,4 +92,4 @@ def delete_user(id):
 
          return {}, 200
     else:
-        return {"message" : "user not found - please try again"}, 404
+        return {"message" : "user not found"}, 404

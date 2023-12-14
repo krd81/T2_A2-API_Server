@@ -18,8 +18,8 @@ admin_booking = Blueprint("admin_booking", __name__, url_prefix="/booking")
 def get_bookings():
     try:
         authorise(None, True)
-        db_bookings = db.select(Booking)
-        bookings = db.session.scalars(db_bookings)
+        stmt = db.select(Booking)
+        bookings = db.session.scalars(stmt)
 
         return BookingSchema(many=True).dump(bookings), 200
     except TypeError:
@@ -85,7 +85,6 @@ def delete_booking(id):
     booking = db.session.scalar(stmt)
 
     try:
-        # if booking:
             db.session.delete(booking)
             db.session.commit()
             return {}, 200
@@ -94,4 +93,18 @@ def delete_booking(id):
 
 
 
+# The DELETE route endpoint (delete all bookings)
+@jwt_required()
+@admin_booking.route("/<int:id>", methods=["DELETE"])
+def delete_bookings():
+    authorise(None, True)
+    stmt = db.select(Booking)
+    bookings = db.session.scalars(stmt)
+    try:
+        for booking in bookings:
+            db.session.delete(booking)
+        db.session.commit()
+        return {}, 200
+    except (TypeError, AttributeError, IntegrityError, DataError):
+       return {"message" : "no bookings found"}, 404
 

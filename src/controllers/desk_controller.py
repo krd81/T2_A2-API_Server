@@ -6,8 +6,6 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import IntegrityError, DataError
 from marshmallow.exceptions import ValidationError
 
-
-
 desk = Blueprint("desk", __name__, url_prefix="/desk")
 
 
@@ -85,7 +83,8 @@ def edit_desk(id):
             return DeskSchema().dump(desk), 200
         else:
             return {"message" : "desk not found"}, 404
-    except (IntegrityError, KeyError, DataError):
+    # except (IntegrityError, KeyError, DataError):
+    except (ZeroDivisionError):
         return {"error" : "Check if new desk id entered already exists"}, 409
 
 
@@ -107,33 +106,4 @@ def delete_desk(id):
             return {"message" : "There are bookings associated with this desk, therefore it cannot be deleted"}, 405
     else:
         return {"message" : "desk not found"}, 404
-
-
-'''
-def get_desk(desk_id=None , activity=""):
-    authorise(None, True)
-    desk_info = DeskSchema().load(request.json)
-
-    if not desk_id == None :
-        stmt = db.select(Desk).filter_by(id=desk_id)
-        desk = db.session.scalar(stmt)
-        if desk:
-            if activity == "delete":
-                return desk
-            elif activity == "update":
-                desk.id = desk_info.get("id", desk.id)
-                desk.available = desk_info.get("available", desk.available)
-                return desk
-    else:
-        if activity == "create":
-            new_desk = Desk(
-                id = desk_info["id"],
-                available = desk_info["available"]
-            )
-            return new_desk
-'''
-
-
-
-
 

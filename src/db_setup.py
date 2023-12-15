@@ -2,12 +2,11 @@ from app import db
 from flask import Blueprint
 from app import bcrypt
 from models.booking import *
-from models.booking_date import *
 from models.dept import *
 from models.desk import *
 from models.user import *
 from client_specs.company_x import *
-import json
+
 
 db_commands = Blueprint("db", __name__)
 
@@ -21,27 +20,6 @@ def db_create():
 @db_commands.cli.command("seed")
 def db_seed():
 
-    dates_json = []
-    dates = []
-
-    with open ("./client_specs/dates_2024.json") as f:
-        dates_json = json.load(f)
-
-    for date in dates_json:
-        d = Date(
-            id = date.get("id"),
-            mon = date.get("mon"),
-            tue = date.get("tue"),
-            wed = date.get("wed"),
-            thu = date.get("thu"),
-            fri = date.get("fri")
-        )
-        dates.append(d)
-    
-    # db.session.add_all(dates)
-    # db.session.commit() 
-
-    
     depts = []
     for dept in DEPARTMENTS:
         d = Dept(
@@ -145,22 +123,4 @@ def db_seed():
     db.session.commit()
 
     print("Database seeded")
-    
-    '''
-    booking_dates = []
-
-    for booking in bookings:
-        booking_date = Date(
-            # _id = booking.id,
-            week_id = booking.week_id,
-            weekday_id = booking.weekday,
-            booking_day_id = booking_date.calc_booking_date(booking.week_id, booking.weekday_id)   
-        )
-        booking_dates.append(booking_date)
-    
-    db.session.add_all(booking_dates)
-    db.session.add_all(bookings)
-    db.session.commit()
-    '''
-   
 

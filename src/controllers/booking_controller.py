@@ -29,14 +29,14 @@ def get_bookings(employee_id):
         stmt = db.select(Booking).filter_by(user_id=employee_id)
         bookings = db.session.scalars(stmt)
 
-        return BookingSchema(many=True).dump(bookings), 200
+        return BookingSchema(many=True, exclude=["user"]).dump(bookings), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "User not found"}, 404
+        return {"message" : "No bookings found"}, 404
 
 
 # The GET route endpoint (show booking)
 @jwt_required()
-@booking.route("/<int:id>") # /booking/booking_id [GET]
+@booking.route("/<int:id>")
 def get_booking(employee_id, id):
     stmt = db.select(User).filter_by(employee_id=employee_id)
     user = db.session.scalar(stmt)
@@ -48,9 +48,9 @@ def get_booking(employee_id, id):
             booking = db.session.scalar(stmt)
 
             if booking:
-                return BookingSchema().dump(booking), 200
+                return BookingSchema(exclude=["user"]).dump(booking), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "User and/or booking not found"}, 404
+        return {"message" : "Booking not found"}, 404
 
 
 # The POST route endpoint (create new)
@@ -77,11 +77,11 @@ def new_booking(employee_id):
         stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
         conflicting_booking = db.session.scalar(stmt)
         try:
-            if not conflicting_booking or booking.desk_id.available:
+            if not conflicting_booking:
                 db.session.add(booking)
                 db.session.commit()
 
-                return BookingSchema().dump(booking), 201
+                return BookingSchema(exclude=["user"]).dump(booking), 201
             else:
                 return {"message" : "Desk is unavailable"}, 400
         except (IntegrityError, DataError):
@@ -110,6 +110,8 @@ def edit_booking(employee_id, id):
         stmt = db.select(Booking).filter_by(user_id=employee_id, id=id)
         booking = db.session.scalar(stmt)
 
+        
+
         try:
             if booking:
                 booking.weekday = update_booking.get("weekday", booking.weekday),
@@ -119,9 +121,9 @@ def edit_booking(employee_id, id):
                 stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
                 conflicting_booking = db.session.scalar(stmt)
 
-                if not conflicting_booking or conflicting_booking.id == id:
+                if  not conflicting_booking or conflicting_booking.id == id:
                     db.session.commit()
-                    return BookingSchema().dump(booking), 200
+                    return BookingSchema(exclude=["user"]).dump(booking), 200
                 else:
                     return {"message" : "Desk is unavailable - please try a different desk/time"}, 409
         except (TypeError, AttributeError, IntegrityError, DataError):
@@ -147,7 +149,7 @@ def delete_booking(employee_id, id):
                 db.session.commit()
                 return {}, 200
     except (TypeError, AttributeError, IntegrityError, DataError):
-        return {"message" : "User and /or booking not found"}, 404
+        return {"message" : "User and/or booking not found"}, 404
 
 
 

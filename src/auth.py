@@ -3,7 +3,6 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from app import db, jwt
 from models.user import User
 
-# Add extra parameter to give functionality for ADMIN ONLY
 
 @jwt_required()
 def authorise(user_id=None, admin_only=False):
@@ -26,3 +25,5 @@ def authorise(user_id=None, admin_only=False):
 def unauthorised_user(error):
     error
     return {"error": "You are not authorised to access this resource"}, 401
+
+

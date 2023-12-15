@@ -37,16 +37,17 @@ def create_user():
         db.session.commit()
 
         token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 100))
-        # Return JWT / user   
+        # Return JWT / user
         return {"token" : token, "user" : UserSchema(exclude=["password", "is_admin"]).dump(user)}, 201
     except (IntegrityError, KeyError, DataError):
         return {"error" : "Either employee id is already registered or there is an error with the department"}, 409
-    
+
 
 # The PUT route endpoint (edit user details)
 @jwt_required()
 @admin.route("/<string:id>", methods=["PUT", "PATCH"])
 def edit_user(id):
+    authorise(None, True)
     try:
         update_user = UserSchema().load(request.json)
     except ValidationError:
@@ -57,15 +58,14 @@ def edit_user(id):
 
         try:
             if user:
-                authorise(None, True)
                 user.employee_id = update_user.get("employee_id", user.employee_id)
                 user.f_name = update_user.get("f_name", user.f_name)
                 user.l_name = update_user.get("l_name", user.l_name)
                 user.email = update_user.get("email", user.email)
                 user.password = update_user.get("password", user.password)
-                user.dept_id = update_user.get("dept_id", user.dept_id)   
-                user.is_admin = update_user.get("is_admin", user.is_admin)     
-                
+                user.dept_id = update_user.get("dept_id", user.dept_id)
+                user.is_admin = update_user.get("is_admin", user.is_admin)
+
                 db.session.commit()
 
                 return UserSchema(exclude=["password"]).dump(user), 200

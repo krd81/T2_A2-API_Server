@@ -8,15 +8,16 @@ class Desk(db.Model):
     id = db.Column(db.String(23), primary_key=True, autoincrement=False)
     available = db.Column(db.Boolean, default=True)
 
-    # bookings = db.relationship('Booking', back_populates = "desk", cascade= "all, delete")
-    bookings = db.relationship('Booking', back_populates = "desk")
+    bookings = db.relationship('Booking', back_populates = "desk", cascade= "all, delete")
+    # bookings = db.relationship('Booking', back_populates = "desk")
 
 
 
 
 class DeskSchema(ma.Schema):
-    bookings = fields.Nested("BookingSchema", many=True, exclude=["desk_id"])
-    
+    bookings = fields.Nested("BookingSchema", many=True, exclude=["desk_id", "user"])
+    # bookings = fields.Nested("BookingSchema", many=True)
+
 
     class Meta:
         fields = ("id", "available", "bookings")

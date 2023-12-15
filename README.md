@@ -23,14 +23,14 @@ ORM benefits (Marshmallow)
 - Description: Allows an admin to create and add a user to the database
 - HTTP Request Verb: POST
 - Required Data: employee id, first name, last name, email, password [between 8 and 14 characters], department
-- Expected Response: HTTP response status 201 - CREATED, a JSON object of the created user (excluding password & is_admin) and a JWT (JSON Web Token)
+- Expected Response: HTTP response status 201 - CREATED, a JSON object of the created user (excluding password) and a JWT (JSON Web Token)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
 ### 2. /admin/\<string:employee_id>
 - Description: Allows an admin to update a user's details (i.e. name, email address, password, department, admin status)
 - HTTP Request Verb: PUT/PATCH
 - Required Data: at least one of employee id, first name, last name, email, password, department
-- Expected Response: HTTP response status 200 - OK, a JSON object of the updated user (excluding password & is_admin)
+- Expected Response: HTTP response status 200 - OK, a JSON object of the updated user (excluding password)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Updates to user cascade to any bookings associated with them
 
@@ -50,12 +50,12 @@ ORM benefits (Marshmallow)
 - Description: Allows admin to view all users registered in database
 - HTTP Request Verb: GET
 - Required Data: N/A
-- Expected Response: HTTP response status 200 - OK, JSON object showing all registered users, including their bookings, excluding passwords and admin status
+- Expected Response: HTTP response status 200 - OK, JSON object showing all registered users, including their bookings, excluding passwords
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
 
 ### 5. /user/\<string:employee_id>
-- Description: Allows a user to see their information
+- Description: Allows a user to see information about themselves (but not other users)
 - HTTP Request Verb: GET
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
@@ -82,7 +82,7 @@ ORM benefits (Marshmallow)
 - Description: Allows admin to view all departments
 - HTTP Request Verb: GET
 - Required Data: N/A
-- Expected Response: HTTP response status 200 - OK, JSON object showing all departments (id, name)
+- Expected Response: HTTP response status 200 - OK, JSON object showing all departments (id, name, users in each dept)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
 
@@ -97,7 +97,7 @@ ORM benefits (Marshmallow)
 - Description: Allows admin to edit department name
 - HTTP Request Verb: PUT/PATCH
 - Required Data: department name
-- Expected Response: HTTP response status 200 - OK, a JSON object of the updated department (id, name)
+- Expected Response: HTTP response status 200 - OK, a JSON object of the updated department (id, name, users in dept)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Updating a department name cascades to any users belonging to that department
 

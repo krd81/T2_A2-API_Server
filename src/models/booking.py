@@ -13,8 +13,8 @@ class Booking(db.Model):
     weekday = db.Column(db.String(3), nullable=False) # Day of the week the booking is for
     date_created = db.Column(db.Date, default=datetime.now().strftime('%Y-%m-%d'))
 
-    desk_id = db.Column(db.String, db.ForeignKey("desks.id"), onupdate="cascade", nullable=False)
-    desk = db.relationship("Desk", back_populates = "bookings")
+    desk_id = db.Column(db.String, db.ForeignKey("desks.id", onupdate="cascade", ondelete="cascade"), nullable=False)
+    desk = db.relationship("Desk", back_populates = "bookings", passive_deletes="all")
 
     # On delete set null or cascade?
     user_id = db.Column(db.String, db.ForeignKey("users.employee_id", onupdate="cascade", ondelete="cascade"), nullable=False)

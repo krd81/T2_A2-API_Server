@@ -42,7 +42,8 @@ def get_booking(id):
 
 
 
-# The POST route endpoint (create new) - not required for ADMIN
+# The POST route endpoint (create new) - not required for ADMIN 
+# since users should create their own bookings
 
 
 
@@ -95,7 +96,7 @@ def delete_booking(id):
 
 # The DELETE route endpoint (delete all bookings)
 @jwt_required()
-@admin_booking.route("/<int:id>", methods=["DELETE"])
+@admin_booking.route("/", methods=["DELETE"])
 def delete_bookings():
     authorise(None, True)
     stmt = db.select(Booking)

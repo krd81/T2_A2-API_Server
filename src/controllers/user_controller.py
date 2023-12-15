@@ -34,7 +34,7 @@ def get_user(id):
 
         if user:
             authorise(user.id)
-            return UserSchema(exclude=["password"]).dump(user), 200
+            return UserSchema(exclude=["password", "is_admin"]).dump(user), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
         return {"message" : "user not found"}, 404
 
@@ -78,7 +78,7 @@ def change_password(id):
             authorise(user.id)
             user.password = bcrypt.generate_password_hash(update_user.get("password", user.password)).decode("utf8")
             db.session.commit()
-            return UserSchema(exclude=["password"]).dump(user), 200
+            return UserSchema(exclude=["password", "is_admin"]).dump(user), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
         return {"message" : "User not found"}, 404
 

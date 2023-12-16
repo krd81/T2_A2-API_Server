@@ -13,7 +13,6 @@ def authorise(user_id=None, admin_only=False):
     if admin_only == True:
         if not user.is_admin:
             abort(make_response(jsonify(message = "You are not authorised to access this resource")), 401)
-    # elif not (user.is_admin or (user_id and jwt_user_id == user_id)):
     elif not (user.is_admin or (jwt_user_id == user_id)):
             abort(make_response(jsonify(message = "You are not authorised to access this resource")), 401)
 

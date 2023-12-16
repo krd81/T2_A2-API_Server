@@ -30,13 +30,11 @@ class Booking(db.Model):
 
     booking_ref = get_booking_ref(None, desk_id, week_id, weekday)
 
-    def get_desk_status(self, some_desk):
-        desk = Desk(id = some_desk.id, available = some_desk.available)
-        # desk_status = desk.available
-        desk_status = DeskSchema(only=["available"]).dump(desk)
-        available = desk_status.get("available")
+    def get_desk_status(self, desk):
+        new_desk = Desk(id = desk.id, available = desk.available)
+        desk = DeskSchema(only=["available"]).dump(new_desk)
+        available = desk.get("available")
         return available
-
 
 
 
@@ -50,3 +48,19 @@ class BookingSchema(ma.Schema):
         # fields = ("id", "user", "user.employee_id", "desk_id", "desk_available", "week_id", "weekday", "date_created", "booking_date", "booking_day_id")
         fields = ("id", "user", "user.employee_id", "desk_id", "desk_available", "week_id", "weekday", "date_created")
 
+'''
+
+
+
+
+    def get_desk_status(self, desk):
+        new_desk = Desk(id = desk.id, available = desk.available)
+        desk = DeskSchema(only=["available"]).dump(new_desk)
+        available = desk.get("available")
+        if desk:
+            return available
+        else:
+            return True
+
+
+'''

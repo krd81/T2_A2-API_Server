@@ -111,10 +111,16 @@ def edit_booking(employee_id, id):
         except ValidationError:
             return {"message" : "Check booking details entered"}
 
+        stmt = db.select(Desk).filter_by(id=update_booking.get("desk_id"))
+        desk = db.session.scalar(stmt)
+
         stmt = db.select(Booking).filter_by(user_id=employee_id, id=id)
         booking = db.session.scalar(stmt)
 
-        
+        if not desk:
+            stmt = db.select(Desk).filter_by(id=booking.desk_id)
+            desk = db.session.scalar(stmt)
+
 
         try:
             if booking:
@@ -125,7 +131,7 @@ def edit_booking(employee_id, id):
                 stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
                 conflicting_booking = db.session.scalar(stmt)
 
-                if  not conflicting_booking or conflicting_booking.id == id:
+                if booking.get_desk_status(desk) and (not conflicting_booking or conflicting_booking.id == id):
                     db.session.commit()
                     return BookingSchema(exclude=["user"]).dump(booking), 200
                 else:

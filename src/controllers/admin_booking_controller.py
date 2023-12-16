@@ -4,6 +4,7 @@ from auth import authorise
 from models.booking import *
 from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import IntegrityError, DataError
+from marshmallow.exceptions import ValidationError
 
 
 # ADMIN ONLY FUNCTIONS
@@ -36,7 +37,7 @@ def get_booking(id):
 
     try:
         if booking:
-            return BookingSchema().dump(booking), 200
+            return BookingSchema(exclude=["user"]).dump(booking), 200
     except (TypeError, AttributeError, IntegrityError, DataError):
         return {"message" : "booking not found"}, 404
 
@@ -52,9 +53,20 @@ def get_booking(id):
 @admin_booking.route("/<int:id>", methods=["PUT", "PATCH"])
 def edit_booking(id):
     authorise(None, True)
-    update_booking = BookingSchema().load(request.json)
+    try:
+        update_booking = BookingSchema().load(request.json)
+    except ValidationError:
+        return {"message" : "Check booking details entered"}
+
+    stmt = db.select(Desk).filter_by(id=update_booking.get("desk_id"))
+    desk = db.session.scalar(stmt)
+
     stmt = db.select(Booking).filter_by(id=id)
     booking = db.session.scalar(stmt)
+
+    if not desk:
+        stmt = db.select(Desk).filter_by(id=booking.desk_id)
+        desk = db.session.scalar(stmt)
 
     try:
         if booking:
@@ -67,11 +79,11 @@ def edit_booking(id):
             db_lookup = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
             conflicting_booking = db.session.scalar(db_lookup)
 
-            if not conflicting_booking or conflicting_booking.id == id:
+            if booking.get_desk_status(desk) and (not conflicting_booking or conflicting_booking.id == id):
                 db.session.commit()
-                return BookingSchema().dump(booking), 200
+                return BookingSchema(exclude=["user"]).dump(booking), 200
             else:
-                return {"message" : "Desk is unavailable"}, 409
+                return {"message" : "Desk is unavailable - please try a different desk/time"}, 409
     except (TypeError, AttributeError, IntegrityError, DataError):
         return {"message" : "Booking not found"}, 404
 

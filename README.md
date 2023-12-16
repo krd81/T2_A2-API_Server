@@ -8,8 +8,7 @@
 [R2 Why is it a problem that needs solving?](#r2-why-is-it-a-problem-that-needs-solving-1)
 
 
-[R3 Why have you chosen this database system. What are the drawbacks compared to others?]
-(#r3-why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others)
+[R3 Why have you chosen this database system. What are the drawbacks compared to others?](#r3-why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others)
 
 
 [R4 Identify and discuss the key functionalities and benefits of an ORM](#r4---identify-and-discuss-the-key-functionalities-and-benefits-of-an-orm)
@@ -31,6 +30,7 @@
 
 
 [R10 Describe the way tasks are allocated and tracked in your project](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
+
 ---
 
 
@@ -329,13 +329,13 @@ Note: Any user belonging to a department which has been deleted means their dept
 ### ERD for Desk Easy Booking System Database 
 The database contains the following tables:
 
-1. The ==Desks== table has a one to many relationship with bookings
+1. The <u>Desks</u> table has a one to many relationship with bookings
 
-1. The ==Bookings== table is related to desks via the desk_id foreign key. A booking has a one to one relationship with a desk. Bookings is related to users via the **employee_id** foreign key; the relationship between booking and user is also one to one
+1. The <u>Bookings</u> table is related to desks via the desk_id foreign key. A booking has a one to one relationship with a desk. Bookings is related to users via the **employee_id** foreign key; the relationship between booking and user is also one to one
 
-1. The ==Users== table has two identifiers: user_id and **employee_id** - the database calls exclusively use employee_id to search, select and manipulate users. Users have a one to many relationship with bookings and also relate to the department table via the foreign key dept_id. 
+1. The <u>Users</u> table has two identifiers: user_id and **employee_id** - the database calls exclusively use employee_id to search, select and manipulate users. Users have a one to many relationship with bookings and also relate to the department table via the foreign key dept_id. 
 
-1. The ==Depts== table contains each department within the company and has a one to many relationship with users. The diagram indicates it is mandatory for uses to have a department, which is true for creating users however, it is possible for users to become detached from the departments table, if their department is deleted by a DB administrator
+1. The <u>Depts</u> table contains each department within the company and has a one to many relationship with users. The diagram indicates it is mandatory for uses to have a department, which is true for creating users however, it is possible for users to become detached from the departments table, if their department is deleted by a DB administrator
 
 ![ERD](/images/ERD_ver3.png)
 

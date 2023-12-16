@@ -21,7 +21,7 @@ def get_bookings():
         stmt = db.select(Booking)
         bookings = db.session.scalars(stmt)
 
-        return BookingSchema(many=True).dump(bookings), 200
+        return BookingSchema(many=True, exclude=["user"]).dump(bookings), 200
     except TypeError:
         return {"message" : "Not authorised - admin only"}
 

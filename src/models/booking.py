@@ -33,10 +33,10 @@ class Booking(db.Model):
 
 class BookingSchema(ma.Schema):
     weekday = fields.String(validate=OneOf(DAYS, error="Day entered was not recognised"))
-    desk = fields.Nested("DeskSchema", only=["id"])
+    desk = fields.Nested("DeskSchema", exclude=["bookings"])
     user = fields.Nested("UserSchema", exclude=["id", "password", "is_admin", "bookings"])
 
 
     class Meta:
-        fields = ("id", "user", "user.employee_id", "desk_id", "week_id", "weekday", "date_created", "booking_date", "booking_day_id")
+        fields = ("id", "user", "user.employee_id", "desk_id", "desk_available", "week_id", "weekday", "date_created", "booking_date", "booking_day_id")
 

@@ -9,9 +9,20 @@ from datetime import timedelta
 
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
-# unauthorised_user
+
 
 # ADMIN ONLY ROUTES: controls creating users / editing user details / deleting users
+
+@jwt_required()
+@admin.route("/")
+def get_users():
+    authorise(None, True)
+    db_users = db.select(User)
+    users = db.session.scalars(db_users).all()
+    return UserSchema(exclude=["password"], many=True).dump(users), 200
+
+
+
 
 @jwt_required()
 @admin.route("/", methods = ["POST"])

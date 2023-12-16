@@ -25,33 +25,38 @@ ORM benefits (Marshmallow)
 - Required Data: employee id, first name, last name, email, password [between 8 and 14 characters], department
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the created user (excluding password) and a JWT (JSON Web Token)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/USER%20-%20CREATE%20USER.png)
 
-### 2. /admin/\<string:employee_id>
+### 2. /user
+- Description: Allows admin to view all users registered in database
+- HTTP Request Verb: GET
+- Required Data: N/A
+- Expected Response: HTTP response status 200 - OK, JSON object showing all registered users, including their bookings, excluding passwords
+- Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/USER%20-%20VIEW%20ALL.png))
+
+
+### 3. /admin/\<string:employee_id>
 - Description: Allows an admin to update a user's details (i.e. name, email address, password, department, admin status)
 - HTTP Request Verb: PUT/PATCH
 - Required Data: at least one of employee id, first name, last name, email, password, department
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated user (excluding password)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Updates to user cascade to any bookings associated with them
+[](/images/USER%20-%20Before%20Edit.png)
+[](/images/USER%20-%20EDIT.png)
 
-
-### 3. /admin/\<string:employee_id>
+### 4. /admin/\<string:employee_id>
 - Description: Allows an admin to delete a user
 - HTTP Request Verb: DELETE
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Deleting a user cascades to any booking with which the user is associated
+[](/images/USER%20-%20DELETE.png)
 
 ### /admin - missing routes:
 - GET: There is no route via admin to view users - this route is available via user/employee_id 
-
-### 4. /user
-- Description: Allows admin to view all users registered in database
-- HTTP Request Verb: GET
-- Required Data: N/A
-- Expected Response: HTTP response status 200 - OK, JSON object showing all registered users, including their bookings, excluding passwords
-- Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
 
 ### 5. /user/\<string:employee_id>
@@ -60,6 +65,7 @@ ORM benefits (Marshmallow)
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
 - Authentication Methods: Valid JWT with an admin's or user's credentials encoded, `authorise()` method checks the user is an admin or the user id being accessed matches the token's identity
+[](/images/USER%20-%20VIEW%20ONE.png)
 
 ### 6. /user
 - Description: Allows a user to login
@@ -67,6 +73,7 @@ ORM benefits (Marshmallow)
 - Required Data: employee id, password
 - Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/USER%20-%20LOGIN.png)
 
 ### 7. /user/\<string:employee_id>
 - Description: Allows user to change their password
@@ -74,6 +81,7 @@ ORM benefits (Marshmallow)
 - Required Data: new password [must be between 8 and 14 characters]
 - Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/USER%20-%20CHANGE%20PASSWORD.png)
 
 ### /user - missing routes:
 - DELETE: There is no route which allows users to delete users - this function is available to admins via the admin route
@@ -84,7 +92,7 @@ ORM benefits (Marshmallow)
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, JSON object showing all departments (id, name, users in each dept)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
-
+[](/images/DEPT%20-%20VIEW%20ALL.png)
 
 ### 9. /dept
 - Description: Allows admin to create new department
@@ -92,6 +100,7 @@ ORM benefits (Marshmallow)
 - Required Data: department name
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the created department (id, name)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/DEPT%20-%20CREATE.png)
 
 ### 10. /dept/\<int:dept_id>
 - Description: Allows admin to edit department name
@@ -100,6 +109,7 @@ ORM benefits (Marshmallow)
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated department (id, name, users in dept)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Updating a department name cascades to any users belonging to that department
+[](/images/DEPT%20-%20EDIT.png)
 
 ### 11. /dept/\<int:dept_id>
 - Description: Allows admin to delete department
@@ -108,6 +118,7 @@ ORM benefits (Marshmallow)
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 Note: Any user belonging to a department which has been deleted means their dept_id is set to `null`
+[](/images/DEPT%20-%20DELETE.png)
 
 ### 12. /desk
 - Description: Allows admin to view all desks
@@ -115,6 +126,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, JSON object showing all desks (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/DESK%20-%20VIEW%20ALL.png)
 
 ### 13. /desk/\<int:desk_id>
 - Description: Allows admin to view a desk
@@ -122,6 +134,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, JSON object showing an individual desk (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/DESK%20-%20VIEW%20ONE.png)
 
 ### 14. /desk
 - Description: Allows admin to create new desk
@@ -129,6 +142,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: desk id, status [optional]
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the created desk (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/DESK%20-%20CREATE.png)
 
 ### 15. /desk/\<int:desk_id>
 - Description: Allows admin to edit desk
@@ -137,6 +151,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated desk (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: If the desk_id or availability status is updated, this update cascades to any boookings associated with it
+[](/images/DESK%20-%20EDIT.png)
 
 ### 16. /desk/\<int:desk_id>
 - Description: Allows admin to delete desk (desks which have bookings cannot be deleted)
@@ -145,6 +160,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Desks cannot be deleted if there are bookings associated, therefore there is no `ondelete` constraint for desk_id foreign keys
+[](/images/DESK%20-%20DELETE.png)
 
 ### 17. /user/\<string:employee_id>/booking
 - Description: Allows user to view their bookings
@@ -152,6 +168,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, a JSON object of their bookings (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/BOOKING%20-%20USER%20VIEW%20ALL.png)
 
 ### 18. /user/\<string:employee_id>/booking/\<int:booking_id>
 - Description: Allows user to view an individual booking
@@ -159,6 +176,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, a JSON object of the booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/BOOKING%20-%20USER%20VIEW%20ONE.png)
 
 ### 19. /user/\<string:employee_id>/booking
 - Description: Allows user to create a new booking (the system prevents duplicate bookings for the same day/desk)
@@ -166,6 +184,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: week_id [week number], weekday [mon, tue, wed, thu, fri], desk_id
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the booking(booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/BOOKING%20-%20USER%20CREATE.png)
 
 ### 20. /user/\<string:employee_id>/booking/\<int:booking_id>
 - Description: Allows user to edit their booking, ie. change the desk and/or week and/or day associated with the booking (fails if the chosen desk/day is unavailable)
@@ -173,6 +192,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: At least one of desk_id, week_id, weekday
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/BOOKING%20-%20USER%20EDIT.png)
 
 ### 21. /user/\<string:employee_id>/booking/\<int:booking_id>
 - Description: Allows user to delete a booking
@@ -180,6 +200,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/BOOKING%20-%20USER%20DELETE%20ONE.png)
 
 ### 22. /user/\<string:employee_id>/booking
 - Description: Allows user to delete all their bookings
@@ -188,6 +209,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 - Note: while delete all is usually not recommended, it's provided here as an option in case a user realises they have made many bookings incorrectly, or perhaps they are away for a period of leave and want to delete their bookings
+[](/images/BOOKING%20-%20USER%20DELETE%20ALL.png)
 
 ### 23. /booking
 - Description: Allows admin to view all bookings
@@ -195,6 +217,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, a JSON object of all bookings (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/BOOKING%20-%20ADMIN%20VIEW%20ALL.png)
 
 ### 24. /booking/\<int:booking_id>
 - Description: Allows admin to view an individual booking
@@ -202,6 +225,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, a JSON object of the booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
+[](/images/BOOKING%20-%20ADMIN%20VIEW%20ONE.png)
 
 ### 25. /booking/\<int:booking_id>
 - Description: Allows admin to edit a booking (fails if the new day/desk is unavailable)
@@ -209,6 +233,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: At least one of employee id, desk_id, week_id, weekday
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/BOOKING%20-%20ADMIN%20EDIT.png)
 
 ### 26. /booking/\<int:booking_id>
 - Description: Allows admin to delete a booking
@@ -216,6 +241,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: N/A
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
+[](/images/BOOKING%20-%20ADMIN%20DELETE.png)
 
 ### 26. /booking
 - Description: Allows admin to delete all bookings
@@ -224,13 +250,24 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: while delete all is usually not recommended, this route has been provided in case of some catastrophic event and provides a method for an admin to delete all bookings, rather than having to do this one by one
+[](/images/BOOKING%20-%20ADMIN%20DELETE%20ALL.png)
 
 ### /booking - missing routes:
 - POST: there is no route to allow admins to create bookings as this should be done by users. If there was an occurance that required an admin to create a booking, they would have to do so via the user route
 
+### Examples of error messages:
+#### Desk ID must be unique
+[](/images/ERROR%20DESK%20-%20CREATE.png)
+
+#### Desk cannot be deleted if bookings for it exist
+[](/images/ERROR%20-%20DELETE%20DESK.png)
+
+#### User cannot access user route of another user
+[](/images/ERROR%20-%20USER%20ACCESSING%20ANOTHER%20USER.png)
+
 ## R6 Entity Relationship Diagram
 
-[ERD](ERD_ver3.png)
+[ERD](/images/ERD_ver3.png)
 
 
 

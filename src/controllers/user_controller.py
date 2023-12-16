@@ -13,14 +13,6 @@ user = Blueprint("user", __name__, url_prefix="/user")
 user.register_blueprint(booking)
 
 
-# The GET route endpoint (show all)
-@jwt_required()
-@user.route("/")
-def get_users():
-    authorise(None, True) #ADMIN only
-    db_users = db.select(User)
-    users = db.session.scalars(db_users).all()
-    return UserSchema(exclude=["password"], many=True).dump(users), 200
 
 
 # The GET route endpoint (show user)

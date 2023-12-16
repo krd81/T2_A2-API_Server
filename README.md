@@ -2,29 +2,37 @@
 
 ---
 ## Contents
-# [R1 Identification of the problem you are trying to solve by building this particular app](#r1-identification-of-the-problem-you-are-trying-to-solve-by-building-this-particular-app)
-# [R2 Why is it a problem that needs solving?](#r2-why-is-it-a-problem-that-needs-solving-1)
+ [R1 Identification of the problem you are trying to solve by building this particular app](#r1-identification-of-the-problem-you-are-trying-to-solve-by-building-this-particular-app)
+[R2 Why is it a problem that needs solving?](#r2-why-is-it-a-problem-that-needs-solving-1)
+[R3 Why have you chosen this database system. What are the drawbacks compared to others?](#r3-why-have-you-chosen-this-database-system-what-are-the-drawbacks-compared-to-others)
+[R4 Identify and discuss the key functionalities and benefits of an ORM](#r4---identify-and-discuss-the-key-functionalities-and-benefits-of-an-orm)
+[R5 Document all endpoints for your API](#r5---document-all-endpoints-for-your-api)
+[R6 Entity Relationship Diagram](#r6---entity-relationship-diagram)
+[R7 Detail any third party services that your app will use](#r7---detail-any-third-party-services-that-your-app-will-use)
+[R8 Describe your project's models in terms of the relationships they have with each other](#r8---describe-your-projects-models-in-terms-of-the-relationships-they-have-with-each-other)
+[R9 Discuss the database relations to be implemented in your application](#r9---discuss-the-database-relations-to-be-implemented-in-your-application)
+[R10 Describe the way tasks are allocated and tracked in your project](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
 ---
 
 
-## R1 Identification of the problem you are trying to solve by building this particular app {#R1}
+## R1 - Identification of the problem you are trying to solve by building this particular app
 
 Many companies now offer flexible and hybrid working arrangements, which allows their employees to work from locations other than their designated office. Since workplaces have transitioned to a hybrid model, many have re-organised their offices so that employees do not have designated desks to allow for more flexibility. The downside of this is that there can be times when the office is busier than usual and there aren't enough desks for everybody there. If someone comes to the office, hoping there will be a desk available, time can be wasted while they try to find a desk and they may even have to go home and work remotely.
 
 Other problems that can occur as a result of the hybrid model are that companies may find their office space is being under-utilised. This could prompt them to divert funds elsewhere if the expense of paying for office space, including furniture, utility bills, equipment etc is deemed unneccesary. There are some business however, that are unable to move to a fully remote operation (e.g. manufacturing, health care etc). These businesses may want visibility of how much the office is being utilised and/or whether employees are coming into the office in accordance with their policy.
 
-## R2 Why is it a problem that needs solving?
+## R2 - Why is it a problem that needs solving?
 
 I have chosen to create an app which companies can use to provide their staff with a method to view and book available desks so that their team members know before coming to the office that they have a desk to use. A tool that allows employees to log into a website and book their desk for the day (or discover that there are none available which would allow them make other arrangements) would be beneficial to a lot of companies and their employees. By solving this problem, time will be saved, which will increase productivity and companies can adapt their resources according to the needs of their business. This has the possibility of reducing expenses and improving the bottom line profit.
 
-## R3 Why have you chosen this database system. What are the drawbacks compared to others?
+## R3 - Why have you chosen this database system. What are the drawbacks compared to others?
 Database benefits
 
 
-## R4 Identify and discuss the key functionalities and benefits of an ORM
+## R4 - Identify and discuss the key functionalities and benefits of an ORM
 ORM benefits (Marshmallow)
 
-## R5 Document all endpoints for your API
+## R5 - Document all endpoints for your API
 
 ### 1. /admin
 - Description: Allows an admin to create and add a user to the database
@@ -298,7 +306,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 ![](/images/ERROR%20-%20USER%20ACCESSING%20ANOTHER%20USER.png)
 
 
-## R6 Entity Relationship Diagram
+## R6 - Entity Relationship Diagram
 ### ERD for Desk Easy Booking System Database 
 The database contains the following tables:
 
@@ -314,9 +322,9 @@ The database contains the following tables:
 
 
 
-## R7 Detail any third party services that your app will use
+## R7 - Detail any third party services that your app will use
 ### FLASK
-Flask is a Python framework which is used to make creating web applications in Python easier. It is described as being flexible and lightweight, which means that while providing the tools and functionality to create both small, simple web applications and also larger, complex ones, it provides a range of customisible features and supports integration with other services needed to support the application, such as password encryption, Support Secure cookies and in-built error handling. It has its own developement server, complete with de-bugger and a unit testing module which makes it a popular choice web developers. Flask is capable of managing the HTTP request-response protocol and is particularly useful in creating RESTful APIs. [^1]  ([^1])
+Flask is a Python framework which is used to make creating web applications in Python easier. It is described as being flexible and lightweight, which means that while providing the tools and functionality to create both small, simple web applications and also larger, complex ones, it provides a range of customisible features and supports integration with other services needed to support the application, such as password encryption, Support Secure cookies and in-built error handling. It has its own developement server, complete with de-bugger and a unit testing module which makes it a popular choice web developers. Flask is capable of managing the HTTP request-response protocol and is particularly useful in creating RESTful APIs. [^1][def1]
 
 ### POSTGRESQL
 PostgreSQL is an open-source relational database widely used for data storage in web applications. It has many powerful features and supports a range of popular programming languages. This app has specifically taken advantage of its ability to handle user-defined types, the referential integrity when using foreign keys, its ability to work well with plug-ins and extensions as well as its extensibility, meaning it has the scope to grow as the business requirements evolve.
@@ -339,7 +347,7 @@ Bcrypt is a password-storing tool, which uses complex algorithms to hash and sal
 The app uses JSON web tokens (JWTs) to manage the process of authenticating users and also for ensuring only users with the correct privileges access restricted routes. JWTs provide a simple and secure way of transmitting information between parties using a JSON object which contains digitally signed information used to identify the user. Flask JWT Extended provides functionality to create tokens, protect routes by labelling them as requiring a token and the ability to access specific information about a user via the token.
 
 
-> ([^1]:(No date) An Easy Introduction to Flask Framework for Beginners. Available at: https://www.analyticsvidhya.com/blog/2021/10/flask-python/. )
+> ([def1]: ^1:(No date) An Easy Introduction to Flask Framework for Beginners. Available at: https://www.analyticsvidhya.com/blog/2021/10/flask-python/. )
 
 
 ## R8 - Describe your project's models in terms of the relationships they have with each other
@@ -384,7 +392,7 @@ The bookings table provides all necessary information about a booking via the fo
 Setting up the database tables in this way means there is no overlap of information as each table has ownership for only what it needs and links to related tables to access any associated information. 
 
 
-## R10 Describe the way tasks are allocated and tracked in your project
+## R10 - Describe the way tasks are allocated and tracked in your project
 For the planning of this project, I used the project management tool available within GitHub. I initially added the following states: To Do, In Progress, Add Ons, Complete. The 'Add Ons' section was to include "nice to have" or additional features, not necessary for the initial pass (in this case, the assignment rubric, in reality this would be the minimum viable product). In "To Do", I placed several items which I knew would need to be done, or at least considered, early on. Some examples of these tasks were planning the database design, creating an initial ERD and answering the first few questions which were all useful in terms of directing the early stages. At the start of the day or upon completing a task, I would go back to the plan and move items as necessary and review what to start on next.
 
 The plan was continuously evolving - as new learnings were made, I would make changes or additions to the task list. It also served as a useful reminder - if an idea popped into my head, I'd add it to the to-do list. This helped to keep the focus on the task at hand, but ensure a new idea wouldn't be forgotten. When clicking into a task card, it is possible to make more detailed comments - this was another feature I found particularly useful as under one task, I often included a number of sub-points, which I could tick off along the way. 
@@ -407,4 +415,6 @@ When making comments in the daily standup Discord channel, I used the project pl
 
 #### Project Status at 16 Dec
 ![](/images/GITHUB%20PROJECT%20-%2016.12.23.png)
+
+
 

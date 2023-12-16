@@ -3,6 +3,7 @@ from app import db
 from auth import authorise
 from models.booking import *
 from models.user import *
+from models.desk import Desk
 from flask_jwt_extended import jwt_required
 from sqlalchemy.exc import IntegrityError, DataError
 from marshmallow.exceptions import ValidationError
@@ -73,11 +74,14 @@ def new_booking(employee_id):
             user_id = employee_id,
             week_id = new_booking["week_id"]
         )
-
+        
         stmt = db.select(Booking).filter_by(booking_ref=booking.get_booking_ref(booking.desk_id, booking.week_id, booking.weekday))
         conflicting_booking = db.session.scalar(stmt)
+        
+        stmt = db.select(Desk).filter_by(id=booking.desk_id)
+        selected_desk = db.session.scalar(stmt)
         try:
-            if not conflicting_booking:
+            if (not conflicting_booking) and booking.get_desk_status(selected_desk):
                 db.session.add(booking)
                 db.session.commit()
 

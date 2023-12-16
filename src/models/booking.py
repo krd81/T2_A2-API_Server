@@ -1,5 +1,6 @@
 from app import db, ma
 from sqlalchemy import func
+from models.desk import *
 from marshmallow import fields
 from marshmallow.validate import OneOf
 from datetime import datetime
@@ -29,6 +30,14 @@ class Booking(db.Model):
 
     booking_ref = get_booking_ref(None, desk_id, week_id, weekday)
 
+    def get_desk_status(self, some_desk):
+        desk = Desk(id = some_desk.id, available = some_desk.available)
+        # desk_status = desk.available
+        desk_status = DeskSchema(only=["available"]).dump(desk)
+        available = desk_status.get("available")
+        return available
+
+
 
 
 class BookingSchema(ma.Schema):
@@ -38,5 +47,6 @@ class BookingSchema(ma.Schema):
 
 
     class Meta:
-        fields = ("id", "user", "user.employee_id", "desk_id", "desk_available", "week_id", "weekday", "date_created", "booking_date", "booking_day_id")
+        # fields = ("id", "user", "user.employee_id", "desk_id", "desk_available", "week_id", "weekday", "date_created", "booking_date", "booking_day_id")
+        fields = ("id", "user", "user.employee_id", "desk_id", "desk_available", "week_id", "weekday", "date_created")
 

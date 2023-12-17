@@ -1,6 +1,8 @@
-# T2_A2-API_Server
+# T2 Assignment 2 - API Web Server Project
+# Kelly De Gannes
 
----
+[Github Repository](https://github.com/krd81/T2_A2-API_Server)
+
 ## Contents
  [R1 Identification of the problem you are trying to solve by building this particular app](#r1-identification-of-the-problem-you-are-trying-to-solve-by-building-this-particular-app)
 
@@ -139,7 +141,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Description: Allows a user to login
 - HTTP Request Verb: POST
 - Required Data: employee id, password
-- Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
+- Expected Response: HTTP response status 200 - OK, with signed JWT, JSON object showing the user, including their bookings, excluding password and admin status
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
 ![](/docs/USER%20-%20LOGIN.png)
@@ -455,7 +457,7 @@ See image for reference:
 
 When making comments in the daily standup Discord channel, I used the project plan as a reminder on what had been completed in the last day and a guide on what I'd be working on that day. There were times when a particular issue would be taking longer than expected, so rather than lose sight of the bigger picture I would seek help from others, or leave it to one side to continue making progress on other areas. One of the many benefits of using a project planning tool is having a visual representation of the progress that has been made. It's all too easy to forget how far you've come from an empty code repository to a fully functioning application. I took screenshots along the way to document my progress.
 
-[Link to GitHub Project Plan](https://github.com/users/krd81/projects/2)
+[My Project Plan](https://github.com/users/krd81/projects/2)
 
 #### Project Status at 7 Dec
 ![](/docs/GITHUB%20PROJECT%20-%2007.12.23.png)
@@ -472,5 +474,8 @@ When making comments in the daily standup Discord channel, I used the project pl
 #### Project Status at 16 Dec
 ![](/docs/GITHUB%20PROJECT%20-%2016.12.23.png)
 
-
+### Record of source control using Github
+![](/docs/GITHUB-COMMITS-1.png)
+![](/docs/GITHUB-COMMITS-2.png)
+![](/docs/GITHUB-COMMITS-3.png)
 

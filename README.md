@@ -33,7 +33,6 @@
 
 ---
 
-
 ## R1 - Identification of the problem you are trying to solve by building this particular app
 
 Many companies now offer flexible and hybrid working arrangements, which allows their employees to work from locations other than their designated office. Since workplaces have transitioned to a hybrid model, many have re-organised their offices so that employees do not have designated desks to allow for more flexibility. The downside of this is that there can be times when the office is busier than usual and there aren't enough desks for everybody there. If someone comes to the office, hoping there will be a desk available, time can be wasted while they try to find a desk and they may even have to go home and work remotely.
@@ -45,11 +44,40 @@ Other problems that can occur as a result of the hybrid model are that companies
 I have chosen to create an app which companies can use to provide their staff with a method to view and book available desks so that their team members know before coming to the office that they have a desk to use. A tool that allows employees to log into a website and book their desk for the day (or discover that there are none available which would allow them make other arrangements) would be beneficial to a lot of companies and their employees. By solving this problem, time will be saved, which will increase productivity and companies can adapt their resources according to the needs of their business. This has the possibility of reducing expenses and improving the bottom line profit.
 
 ## R3 - Why have you chosen this database system. What are the drawbacks compared to others?
-Database benefits
+The database used is PostgreSQL, which lends itself well to the needs of this project due to its ability to handle complex queries, while allowing multiple users to simultaneously access the database and perform read-write actions. It is able to handle very large data sets, and so provides the assurity of scalability to medium or large businesses and even multi-national corporations. PostgreSQL is open source and has an active community of developers consistently working on updates and improvements which mean it remains a popular choice for businesses and consitently in the top 5 of most popular databases, according to DB-Engines.
+
+Below is a comparison of the features provided by PostgreSQL vs MySQL:
+
+- Memory usage and disk requirements
+Postgres takes a heavy toll on memory overhead due to its requirement to generate a new system process for every client connection. By comparison MySQL uses a single thread for each connection, requiring less memory allocation, which may provide a better performance for smaller or medium sized business requirements.
+
+
+- ORDBMS
+Postgres is an **object** relational database management system, compared with MySQL which is a standard relational DBMS - therefore Postgres has native capabilities for converting its entities into objects and also is inherently able to define inheritance relationships between tables. This assists its ability to handle complex relationships without sacrificing performance.
+
+- Data Types & Structure
+Postgres provides the ability to use complex and custom data types which offers increased functionality. MySQL by contrast has a more limited amount of data types and in terms of structure is less SQL-compliant compared with Postgres which means it can produce unpredictable results
+
+- Data integrity
+PostgreSQL uses multi-version concurrency control (MVCC), which is one of the primary reasons for its popularity for businesses. This ensures the integrity of data whilst multiple users are reading from and writing to the database simultaneously. MySQL does offer a solution but it is generally accepted that Postgres outperforms MySQL in handling MVCC.
+
+### When MySQL could be chosen ahead of PostgreSQL
+- Speed
+MySQL is well-known to be one of the fastest performing databases, which is an important consideration factor, and one which places it ahead of Postgres. One of the reasons for this is MySQL's strong performance when dealing with read-only queries. In the case of this app which relies heavily on the full spectrum of CRUD operations, it may not be worth the trade-off. But for an application whose main purpose is *retrieving* data, MySQL would be a good choice.
+
+- Simplicity
+One of MySQL's attractions is its simplicity and ease of use. It was built to be and remains lightweight and is quick to set up without the need for too many adjustments. However, it does offer extensibility features through a range of plug-ins. When the requirements of the project demand urgency, and the complexity level is low, MySQL is a good choice.
+
+
+
+> Citations
+> Engines ranking (no date) DB. Available at: https://db-engines.com/en/ranking (Accessed: 17 December 2023). 
+> Smallcombe, M. (2019) PostgreSQL vs MySQL: The critical differences, Integrate.io. Available at: https://www.integrate.io/blog/postgresql-vs-mysql-which-one-is-better-for-your-use-case/#three (Accessed: 17 December 2023). 
+> Salman Ravoof&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Salman Ravoof is a self-taught web developer (2023) PostgreSQL vs MySQL: Explore their 12 critical differences, Kinsta®. Available at: https://kinsta.com/blog/postgresql-vs-mysql/#postgresql-vs-mysql-headtohead-comparison (Accessed: 17 December 2023). 
 
 
 ## R4 - Identify and discuss the key functionalities and benefits of an ORM
-ORM benefits (Marshmallow)
+An object relational mapper (ORM) is used to allow database entities to be treated as objects in an object-oriented paradigm. It takes away the need to write raw SQL queries to interact with the database and instead acts as an interpreter, converting instructions written in an object-oriented programming language into structured query language (SQL) so that an SQL database can process it. This enables programmers to focus on higher level concerns, such as business logic, implementing efficient and functional methods and functions etc, rather than being hindered by writing long and complex SQL queries. Additionally, the 'mapper' part of the ORM provides the function of mapping 'relationships' (e.g. one-to-one or one-to-many) and manages the integrity of the data between the relations. An ORM is 'database-agnostic', so it is not tied to one database or another. It is able to abstract the database engine, allowing for portability to another database management system in the future, if required, without needing to re-write the entire application.
 
 ## R5 - Document all endpoints for your API
 
@@ -352,7 +380,7 @@ PostgreSQL is an open-source relational database widely used for data storage in
 SQL Alchemy is an Object Relational Mapper (ORM). It is used to allow access to and manipulation of the database without the need to enter SQL commands. It achieves this by converting the database objects (e.g. tables, rows, entity characteristics) to Python objects meaning the database is converted to an object-oriented paradigm which enables database queries to be executed within Python.
 
 ### PSYCOPG2
-Psycopg2 is a database adapter that facilitates the connection between Python and the PostgreSQL database. It is called as part of the initial database set up and contains a URL with important security information, such as the database "user" it will assume when accessing the database as well as the name of the Postgres database to which it needs to connect.
+Psycopg2 is a database adapter that allows the ORM (SQL Alchemy) to connect to a PostgreSQL database. It is called as part of the initial database set up and contains a URL with important security information, such as the database "user" it will assume when accessing the database as well as the name of the Postgres database to which it needs to connect.
 
 ### MARSHMALLOW
 Marshmallow is a Python library able to convert database object types into Python object types. It has powerful features allowing serialisation from JSON to Python and vice versa, making manipulating and extracting data from the database a much less labour intensive process. It comes with features that allow data validation, enforcing of mandatory fields and the nesting of data from join tables. It has its own error handling via its exception classes - this is particularly useful when targetting and handling Marshmallow specific errors.
@@ -365,8 +393,8 @@ Bcrypt is a password-storing tool, which uses complex algorithms to hash and sal
 ### Flask JWT Manager
 The app uses JSON web tokens (JWTs) to manage the process of authenticating users and also for ensuring only users with the correct privileges access restricted routes. JWTs provide a simple and secure way of transmitting information between parties using a JSON object which contains digitally signed information used to identify the user. Flask JWT Extended provides functionality to create tokens, protect routes by labelling them as requiring a token and the ability to access specific information about a user via the token.
 
-
-> ([def1]: ^1:(No date) An Easy Introduction to Flask Framework for Beginners. Available at: https://www.analyticsvidhya.com/blog/2021/10/flask-python/. )
+> Citation
+> (No date) An Easy Introduction to Flask Framework for Beginners. Available at: https://www.analyticsvidhya.com/blog/2021/10/flask-python/. 
 
 
 ## R8 - Describe your project's models in terms of the relationships they have with each other

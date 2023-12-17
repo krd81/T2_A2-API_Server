@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 
 # app.py creates objects of SQLAlchemy (the ORM),
-# Marshmallow (object serialisation support),
+# Marshmallow (object serialisation/deserialisation),
 # Bcrypt (password encyrption) & JWT (handles JSON web tokens)
 
 db = SQLAlchemy()

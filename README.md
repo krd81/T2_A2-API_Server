@@ -32,6 +32,10 @@
 [R10 Describe the way tasks are allocated and tracked in your project](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
 
 ---
+### Installation Pre-requisite:
+- In order for the sample database data to be loaded correctly, ensure the "company-x.
+___
+
 
 ## R1 - Identification of the problem you are trying to solve by building this particular app
 

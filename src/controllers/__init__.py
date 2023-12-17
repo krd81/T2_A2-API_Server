@@ -6,7 +6,8 @@ from controllers.desk_controller import desk
 from controllers.user_controller import user
 
 
-
+# Convenient to include all controllers here, once added to this list, they are automatically 
+# accessible by app.py
 registerable_controllers = [
     admin,
     admin_booking,

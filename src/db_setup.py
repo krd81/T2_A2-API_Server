@@ -5,18 +5,38 @@ from models.booking import *
 from models.dept import *
 from models.desk import *
 from models.user import *
-from client_specs.company_x import *
 
 
+# the db_commands instance of Blueprint which is registered in __init__.py
 db_commands = Blueprint("db", __name__)
 
+
+DEPARTMENTS = ["Finance", "IT", "Legal", "Marketing", "Customer Service", "Sales", "HR", "Executive"]
+
+# Desks
+# Level 1
+DESKS_1 = ["1A_01", "1A_02", "1A_03", "1A_04", "1A_05", "1B_01", "1B_02", "1B_03", "1B_04", "1B_05"]
+
+# Level 2
+DESKS_2 = ["2A_01", "2A_02", "2A_03", "2A_04", "2A_05", "2B_01", "2B_02", "2B_03", "2B_04", "2B_05"]
+
+# Level 3
+DESKS_3 = ["3A_01", "3A_02", "3A_03", "3A_04", "3A_05", "3B_01", "3B_02", "3B_03", "3B_04", "3B_05"]
+
+ALL_DESKS = DESKS_1 + DESKS_2 + DESKS_3
+
+
+
+# db_commands.cli allow terminal commands to be formed within the app
+# and executed by the command line interface
 @db_commands.cli.command("create")
 def db_create():
+    # In testing, whenever changes are made the database tables must be dropped and re-created
     db.drop_all()
     db.create_all()
     print("Created tables")
 
-
+# Once the tables have been re-created, they can be re-seeded with the sample data
 @db_commands.cli.command("seed")
 def db_seed():
 
@@ -27,6 +47,7 @@ def db_seed():
         )        
         depts.append(d)
 
+    # Each tables elements are added then committed to avoid any data inconsistency issues
     db.session.add_all(depts)
     db.session.commit()
 
@@ -121,6 +142,7 @@ def db_seed():
     
     db.session.add_all(bookings)
     db.session.commit()
+    # Once all data is added and committed, the database is ready for use
 
     print("Database seeded")
 

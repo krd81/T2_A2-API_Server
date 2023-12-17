@@ -88,7 +88,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Description: Allows an admin to create and add a user to the database
 - HTTP Request Verb: POST
 - Required Data: employee id, first name, last name, email, password [between 8 and 14 characters], department
-- Expected Response: HTTP response status 201 - CREATED, a JSON object of the created user (excluding password) and a JWT (JSON Web Token)
+- Expected Response: HTTP response status 201 - CREATED, a JSON object of the created user (excluding password)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
 ![](/docs/USER%20-%20CREATE%20USER.png)

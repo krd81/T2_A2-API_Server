@@ -60,8 +60,9 @@ def signin():
     try:
         # Only executes if a user was found in the filter and their password matches the user's (hashed) password
         if user and bcrypt.check_password_hash(user.password, current_user["password"]):
-            token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 100))
+            token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 4))
             # The UserSchema and dump() method serialises the data and returns the formatted result, excluding "password" and "is_admin"
+            # The JWT is also returned which allows testing of the authenticated routes whilst in development
             return {"token" : token, "user" : UserSchema(exclude=["password", "is_admin"]).dump(user)}, 200
     except (TypeError, AttributeError, IntegrityError, DataError):
         return {"error" : "Employee id or password is incorrect"}, 409

@@ -32,9 +32,6 @@
 [R10 Describe the way tasks are allocated and tracked in your project](#r10---describe-the-way-tasks-are-allocated-and-tracked-in-your-project)
 
 ---
-### Installation Pre-requisite:
-- In order for the sample database data to be loaded correctly, ensure the "company-x.
-___
 
 
 ## R1 - Identification of the problem you are trying to solve by building this particular app
@@ -94,7 +91,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the created user (excluding password) and a JWT (JSON Web Token)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/USER%20-%20CREATE%20USER.png)
+![](/docs/USER%20-%20CREATE%20USER.png)
 
 ### 2. /user
 - Description: Allows admin to view all users registered in database
@@ -103,7 +100,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Expected Response: HTTP response status 200 - OK, JSON object showing all registered users, including their bookings, excluding passwords
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/USER%20-%20VIEW%20ALL.png)
+![](/docs/USER%20-%20VIEW%20ALL.png)
 
 
 ### 3. /admin/\<string:employee_id>
@@ -114,8 +111,8 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Updates to user cascade to any bookings associated with them
 
-![](/images/USER%20-%20Before%20Edit.png)
-![](/images/USER%20-%20EDIT.png)
+![](/docs/USER%20-%20Before%20Edit.png)
+![](/docs/USER%20-%20EDIT.png)
 
 ### 4. /admin/\<string:employee_id>
 - Description: Allows an admin to delete a user
@@ -125,7 +122,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Deleting a user cascades to any booking with which the user is associated
 
-![](/images/USER%20-%20DELETE.png)
+![](/docs/USER%20-%20DELETE.png)
 
 
 
@@ -136,7 +133,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
 - Authentication Methods: Valid JWT with an admin's or user's credentials encoded, `authorise()` method checks the user is an admin or the user id being accessed matches the token's identity
 
-![](/images/USER%20-%20VIEW%20ONE.png)
+![](/docs/USER%20-%20VIEW%20ONE.png)
 
 ### 6. /user
 - Description: Allows a user to login
@@ -145,7 +142,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/USER%20-%20LOGIN.png)
+![](/docs/USER%20-%20LOGIN.png)
 
 ### 7. /user/\<string:employee_id>
 - Description: Allows user to change their password
@@ -154,7 +151,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Expected Response: HTTP response status 200 - OK, JSON object showing the user, including their bookings, excluding password and admin status
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/USER%20-%20CHANGE%20PASSWORD.png)
+![](/docs/USER%20-%20CHANGE%20PASSWORD.png)
 
 ### /user - missing routes:
 - DELETE: There is no route which allows users to delete users - this function is available to admins via the admin route
@@ -166,7 +163,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Expected Response: HTTP response status 200 - OK, JSON object showing all departments (id, name, users in each dept)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/DEPT%20-%20VIEW%20ALL.png)
+![](/docs/DEPT%20-%20VIEW%20ALL.png)
 
 ### 9. /dept
 - Description: Allows admin to create new department
@@ -175,7 +172,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the created department (id, name)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/DEPT%20-%20CREATE.png)
+![](/docs/DEPT%20-%20CREATE.png)
 
 ### 10. /dept/\<int:dept_id>
 - Description: Allows admin to edit department name
@@ -185,7 +182,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Updating a department name cascades to any users belonging to that department
 
-![](/images/DEPT%20-%20EDIT.png)
+![](/docs/DEPT%20-%20EDIT.png)
 
 ### 11. /dept/\<int:dept_id>
 - Description: Allows admin to delete department
@@ -195,7 +192,7 @@ An object relational mapper (ORM) is used to allow database entities to be treat
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 Note: Any user belonging to a department which has been deleted means their dept_id is set to `null`
 
-![](/images/DEPT%20-%20DELETE.png)
+![](/docs/DEPT%20-%20DELETE.png)
 
 ### 12. /desk
 - Description: Allows admin to view all desks
@@ -204,7 +201,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, JSON object showing all desks (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/DESK%20-%20VIEW%20ALL.png)
+![](/docs/DESK%20-%20VIEW%20ALL.png)
 
 ### 13. /desk/\<int:desk_id>
 - Description: Allows admin to view a desk
@@ -213,7 +210,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, JSON object showing an individual desk (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/DESK%20-%20VIEW%20ONE.png)
+![](/docs/DESK%20-%20VIEW%20ONE.png)
 
 ### 14. /desk
 - Description: Allows admin to create new desk
@@ -222,7 +219,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the created desk (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/DESK%20-%20CREATE.png)
+![](/docs/DESK%20-%20CREATE.png)
 
 ### 15. /desk/\<int:desk_id>
 - Description: Allows admin to edit desk
@@ -232,7 +229,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: If the desk_id or availability status is updated, this update cascades to any bookings associated with it
 
-![](/images/DESK%20-%20EDIT.png)
+![](/docs/DESK%20-%20EDIT.png)
 
 ### 16. /desk/\<int:desk_id>
 - Description: Allows admin to delete desk (desks which have bookings cannot be deleted)
@@ -242,7 +239,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: Desks cannot be deleted if there are bookings associated, therefore there is no `ondelete` constraint for desk_id foreign keys
 
-![](/images/DESK%20-%20DELETE.png)
+![](/docs/DESK%20-%20DELETE.png)
 
 ### 17. /user/\<string:employee_id>/booking
 - Description: Allows user to view their bookings
@@ -251,7 +248,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, a JSON object of their bookings (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/BOOKING%20-%20USER%20VIEW%20ALL.png)
+![](/docs/BOOKING%20-%20USER%20VIEW%20ALL.png)
 
 ### 18. /user/\<string:employee_id>/booking/\<int:booking_id>
 - Description: Allows user to view an individual booking
@@ -260,7 +257,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, a JSON object of the booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/BOOKING%20-%20USER%20VIEW%20ONE.png)
+![](/docs/BOOKING%20-%20USER%20VIEW%20ONE.png)
 
 ### 19. /user/\<string:employee_id>/booking
 - Description: Allows user to create a new booking (the system prevents duplicate bookings for the same day/desk)
@@ -269,7 +266,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 201 - CREATED, a JSON object of the booking(booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/BOOKING%20-%20USER%20CREATE.png)
+![](/docs/BOOKING%20-%20USER%20CREATE.png)
 
 ### 20. /user/\<string:employee_id>/booking/\<int:booking_id>
 - Description: Allows user to edit their booking, ie. change the desk and/or week and/or day associated with the booking (fails if the chosen desk/day is unavailable)
@@ -278,7 +275,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/BOOKING%20-%20USER%20EDIT.png)
+![](/docs/BOOKING%20-%20USER%20EDIT.png)
 
 ### 21. /user/\<string:employee_id>/booking/\<int:booking_id>
 - Description: Allows user to delete a booking
@@ -287,7 +284,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/BOOKING%20-%20USER%20DELETE%20ONE.png)
+![](/docs/BOOKING%20-%20USER%20DELETE%20ONE.png)
 
 ### 22. /user/\<string:employee_id>/booking
 - Description: Allows user to delete all their bookings
@@ -297,7 +294,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 - Note: while delete all is usually not recommended, it's provided here as an option in case a user realises they have made many bookings incorrectly, or perhaps they are away for a period of leave and want to delete their bookings
 
-![](/images/BOOKING%20-%20USER%20DELETE%20ALL.png)
+![](/docs/BOOKING%20-%20USER%20DELETE%20ALL.png)
 
 ### 23. /booking
 - Description: Allows admin to view all bookings
@@ -306,7 +303,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, a JSON object of all bookings (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/BOOKING%20-%20ADMIN%20VIEW%20ALL.png)
+![](/docs/BOOKING%20-%20ADMIN%20VIEW%20ALL.png)
 
 ### 24. /booking/\<int:booking_id>
 - Description: Allows admin to view an individual booking
@@ -315,7 +312,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, a JSON object of the booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Requires employee id, which is matched against the database, if a match is found the hashed password is checked against the hashed password of the user found in the database. If successful a JWT is generated which allows the user to access all user level routes.
 
-![](/images/BOOKING%20-%20ADMIN%20VIEW%20ONE.png)
+![](/docs/BOOKING%20-%20ADMIN%20VIEW%20ONE.png)
 
 ### 25. /booking/\<int:booking_id>
 - Description: Allows admin to edit a booking (fails if the new day/desk is unavailable)
@@ -324,7 +321,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated booking (booking id, desk id, week id, weekday, user object excluding password/is_admin)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/BOOKING%20-%20ADMIN%20EDIT.png)
+![](/docs/BOOKING%20-%20ADMIN%20EDIT.png)
 
 ### 26. /booking/\<int:booking_id>
 - Description: Allows admin to delete a booking
@@ -333,7 +330,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Expected Response: HTTP response status 200 - OK, empty JSON object
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 
-![](/images/BOOKING%20-%20ADMIN%20DELETE.png)
+![](/docs/BOOKING%20-%20ADMIN%20DELETE.png)
 
 ### 27. /booking
 - Description: Allows admin to delete all bookings
@@ -343,25 +340,25 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
 - Note: while delete all is usually not recommended, this route has been provided in case of some catastrophic event and provides a method for an admin to delete all bookings, rather than having to do this one by one
 
-![](/images/BOOKING%20-%20ADMIN%20DELETE%20ALL.png)
+![](/docs/BOOKING%20-%20ADMIN%20DELETE%20ALL.png)
 
 ### /booking - missing routes:
 - POST: there is no route to allow admins to create bookings as this should be done by users. If there was an occurence that required an admin to create a booking, they would have to do so via the user route
 
 ### Examples of error messages:
 #### Desk ID must be unique
-![](/images/ERROR%20DESK%20-%20CREATE.png)
+![](/docs/ERROR%20DESK%20-%20CREATE.png)
 
 #### Desk cannot be deleted if bookings for it exist
-![](/images/ERROR%20-%20DELETE%20DESK.png)
+![](/docs/ERROR%20-%20DELETE%20DESK.png)
 
 #### User cannot access user route of another user
-![](/images/ERROR%20-%20USER%20ACCESSING%20ANOTHER%20USER.png)
+![](/docs/ERROR%20-%20USER%20ACCESSING%20ANOTHER%20USER.png)
 
 ### Examples of code to handle errors
-![](/images/ERROR%20HANDLING-1.png)
+![](/docs/ERROR%20HANDLING-1.png)
 
-![](/images/ERROR%20HANDLING-2.png)
+![](/docs/ERROR%20HANDLING-2.png)
 
 ## R6 - Entity Relationship Diagram
 ### ERD for Desk Easy Booking System Database 
@@ -375,7 +372,7 @@ The database contains the following tables:
 
 1. The **Depts** table contains each department within the company and has a one to many relationship with users. The diagram indicates it is mandatory for uses to have a department, which is true for creating users however, it is possible for users to become detached from the departments table, if their department is deleted by a DB administrator
 
-![ERD](/images/ERD_ver3.png)
+![ERD](/docs/ERD_ver3.png)
 
 
 
@@ -454,24 +451,26 @@ For the planning of this project, I used the project management tool available w
 
 The plan was continuously evolving - as new learnings were made, I would make changes or additions to the task list. It also served as a useful reminder - if an idea popped into my head, I'd add it to the to-do list. This helped to keep the focus on the task at hand, but ensure a new idea wouldn't be forgotten. When clicking into a task card, it is possible to make more detailed comments - this was another feature I found particularly useful as under one task, I often included a number of sub-points, which I could tick off along the way. 
 See image for reference:
-![](/images/GITHUB%20PROJECT%20-%20ADDITIONAL%20COMMENT.png)
+![](/docs/GITHUB%20PROJECT%20-%20ADDITIONAL%20COMMENT.png)
 
 When making comments in the daily standup Discord channel, I used the project plan as a reminder on what had been completed in the last day and a guide on what I'd be working on that day. There were times when a particular issue would be taking longer than expected, so rather than lose sight of the bigger picture I would seek help from others, or leave it to one side to continue making progress on other areas. One of the many benefits of using a project planning tool is having a visual representation of the progress that has been made. It's all too easy to forget how far you've come from an empty code repository to a fully functioning application. I took screenshots along the way to document my progress.
 
+[Link to GitHub Project Plan](https://github.com/users/krd81/projects/2)
+
 #### Project Status at 7 Dec
-![](/images/GITHUB%20PROJECT%20-%2007.12.23.png)
+![](/docs/GITHUB%20PROJECT%20-%2007.12.23.png)
 
 #### Project Status at 10 Dec
-![](/images/GITHUB%20PROJECT%20-%2010.12.23.png)
+![](/docs/GITHUB%20PROJECT%20-%2010.12.23.png)
 
 #### Project Status at 12 Dec
-![](/images/GITHUB%20PROJECT%20-%2012.12.23.png)
+![](/docs/GITHUB%20PROJECT%20-%2012.12.23.png)
 
 #### Project Status at 14 Dec
-![](/images/GITHUB%20PROJECT%20-%2014.12.23.png)
+![](/docs/GITHUB%20PROJECT%20-%2014.12.23.png)
 
 #### Project Status at 16 Dec
-![](/images/GITHUB%20PROJECT%20-%2016.12.23.png)
+![](/docs/GITHUB%20PROJECT%20-%2016.12.23.png)
 
 
 

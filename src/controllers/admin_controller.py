@@ -54,10 +54,10 @@ def create_user():
         db.session.add(user)
         db.session.commit()
 
-        token = create_access_token(identity=user.id, additional_claims={"id": user.id}, expires_delta = timedelta(hours = 100))
+
         # Return JWT / user
         # The UserSchema and dump() method serialises the data and returns the formatted result, excluding "password"
-        return {"token" : token, "user" : UserSchema(exclude=["password"]).dump(user)}, 201
+        return UserSchema(exclude=["password"]).dump(user), 201
     except (IntegrityError, KeyError, DataError):
         return {"error" : "Either employee id is already registered or there is an error with the department"}, 409
 

@@ -14,15 +14,19 @@ bcrypt = Bcrypt()
 jwt = JWTManager()
 
 def create_app():
+    # A Flask app is created
     app = Flask(__name__)
 
     app.config.from_object('config.app_config')
 
+    # The SQLAlchemy object is initialised with the app
+    # followed by the marshmallow, bcrypt and JWT objects
     db.init_app(app)
     ma.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+    # The blueprints are registered with the app
     from db_setup import db_commands
     app.register_blueprint(db_commands)
 

@@ -37,14 +37,16 @@
 
 Many companies now offer flexible and hybrid working arrangements, which allows their employees to work from locations other than their designated office. Since workplaces have transitioned to a hybrid model, many have re-organised their offices so that employees do not have designated desks to allow for more flexibility. The downside of this is that there can be times when the office is busier than usual and there aren't enough desks for everybody there. If someone comes to the office, hoping there will be a desk available, time can be wasted while they try to find a desk and they may even have to go home and work remotely.
 
-Other problems that can occur as a result of the hybrid model are that companies may find their office space is being under-utilised. This could prompt them to divert funds elsewhere if the expense of paying for office space, including furniture, utility bills, equipment etc is deemed unneccesary. There are some business however, that are unable to move to a fully remote operation (e.g. manufacturing, health care etc). These businesses may want visibility of how much the office is being utilised and/or whether employees are coming into the office in accordance with their policy.
+Other problems that can occur as a result of the hybrid model are that companies may find their office space is being under-utilised. This could prompt them to divert funds elsewhere if the expense of paying for office space, including furniture, utility bills, equipment etc is deemed unnecessary. There are some businesses however, that are unable to move to a fully remote operation (e.g. manufacturing, health care etc). These businesses may want visibility of how much the office is being utilised and/or whether employees are coming into the office in accordance with their policy.
 
 ## R2 - Why is it a problem that needs solving?
 
-I have chosen to create an app which companies can use to provide their staff with a method to view and book available desks so that their team members know before coming to the office that they have a desk to use. A tool that allows employees to log into a website and book their desk for the day (or discover that there are none available which would allow them make other arrangements) would be beneficial to a lot of companies and their employees. By solving this problem, time will be saved, which will increase productivity and companies can adapt their resources according to the needs of their business. This has the possibility of reducing expenses and improving the bottom line profit.
+I have chosen to create an app which companies can use to provide their staff with a method to view and book available desks so that their team members know before coming to the office that they have a desk to use. A tool that allows employees to log into a website and book their desk for the day (or discover that there are none available which would allow them make other arrangements) would be beneficial to a lot of companies and their employees. By solving this problem, time will be saved, which will increase productivity and companies can adapt their resources according to the needs of their business. This has the possibility of reducing expenses and improving the bottom line profit. 
+
+Some companies offer simple solutions to this issue, but from research among peers, they have found them to have issues with data inconsistency, cumbersome or difficult to use. By building a "best-in-class" solution that is feature-rich, reliable, scalable and fun to use, the app has the potential to be marketed as an integral tool for businesses requiring a system to help manage their hybrid workplace.
 
 ## R3 - Why have you chosen this database system. What are the drawbacks compared to others?
-The database used is PostgreSQL, which lends itself well to the needs of this project due to its ability to handle complex queries, while allowing multiple users to simultaneously access the database and perform read-write actions. It is able to handle very large data sets, and so provides the assurity of scalability to medium or large businesses and even multi-national corporations. PostgreSQL is open source and has an active community of developers consistently working on updates and improvements which mean it remains a popular choice for businesses and consitently in the top 5 of most popular databases, according to DB-Engines.
+The database used is PostgreSQL, which lends itself well to the needs of this project due to its ability to handle complex queries, while allowing multiple users to simultaneously access the database and perform read-write actions. It is able to handle very large data sets, and so provides the assurance of scalability to medium or large businesses and even multinational corporations. PostgreSQL is open source and has an active community of developers consistently working on updates and improvements which mean it remains a popular choice for businesses and consistently in the top 5 of most popular databases, according to DB-Engines.
 
 Below is a comparison of the features provided by PostgreSQL vs MySQL:
 
@@ -66,7 +68,7 @@ PostgreSQL uses multi-version concurrency control (MVCC), which is one of the pr
 MySQL is well-known to be one of the fastest performing databases, which is an important consideration factor, and one which places it ahead of Postgres. One of the reasons for this is MySQL's strong performance when dealing with read-only queries. In the case of this app which relies heavily on the full spectrum of CRUD operations, it may not be worth the trade-off. But for an application whose main purpose is *retrieving* data, MySQL would be a good choice.
 
 - Simplicity
-One of MySQL's attractions is its simplicity and ease of use. It was built to be and remains lightweight and is quick to set up without the need for too many adjustments. However, it does offer extensibility features through a range of plug-ins. When the requirements of the project demand urgency, and the complexity level is low, MySQL is a good choice.
+One of MySQL's attractions is its simplicity and ease of use. It was designed to be and remains lightweight and is quick to set up without the need for too many adjustments. However, it does offer extensibility features through a range of plug-ins. When the requirements of the project demand urgency, and the complexity level is low, MySQL is a good choice.
 
 
 
@@ -224,7 +226,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 - Required Data: at least one of desk id, availability status
 - Expected Response: HTTP response status 200 - OK, a JSON object of the updated desk (id, status, bookings)
 - Authentication Methods: Valid JWT with admin's credentials encoded, `authorise()` method checks user has admin status
-- Note: If the desk_id or availability status is updated, this update cascades to any boookings associated with it
+- Note: If the desk_id or availability status is updated, this update cascades to any bookings associated with it
 
 ![](/images/DESK%20-%20EDIT.png)
 
@@ -329,7 +331,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 
 ![](/images/BOOKING%20-%20ADMIN%20DELETE.png)
 
-### 26. /booking
+### 27. /booking
 - Description: Allows admin to delete all bookings
 - HTTP Request Verb: DELETE
 - Required Data: N/A
@@ -340,7 +342,7 @@ Note: Any user belonging to a department which has been deleted means their dept
 ![](/images/BOOKING%20-%20ADMIN%20DELETE%20ALL.png)
 
 ### /booking - missing routes:
-- POST: there is no route to allow admins to create bookings as this should be done by users. If there was an occurance that required an admin to create a booking, they would have to do so via the user route
+- POST: there is no route to allow admins to create bookings as this should be done by users. If there was an occurence that required an admin to create a booking, they would have to do so via the user route
 
 ### Examples of error messages:
 #### Desk ID must be unique
@@ -352,18 +354,22 @@ Note: Any user belonging to a department which has been deleted means their dept
 #### User cannot access user route of another user
 ![](/images/ERROR%20-%20USER%20ACCESSING%20ANOTHER%20USER.png)
 
+### Examples of code to handle errors
+![](/images/ERROR%20HANDLING-1.png)
+
+![](/images/ERROR%20HANDLING-2.png)
 
 ## R6 - Entity Relationship Diagram
 ### ERD for Desk Easy Booking System Database 
 The database contains the following tables:
 
-1. The <u>Desks</u> table has a one to many relationship with bookings
+1. The **Desks** table has a one to many relationship with bookings
 
-1. The <u>Bookings</u> table is related to desks via the desk_id foreign key. A booking has a one to one relationship with a desk. Bookings is related to users via the **employee_id** foreign key; the relationship between booking and user is also one to one
+1. The **Bookings** table is related to desks via the desk_id foreign key. A booking has a one to one relationship with a desk. Bookings is related to users via the **employee_id** foreign key; the relationship between booking and user is also one to one
 
-1. The <u>Users</u> table has two identifiers: user_id and **employee_id** - the database calls exclusively use employee_id to search, select and manipulate users. Users have a one to many relationship with bookings and also relate to the department table via the foreign key dept_id. 
+1. The **Users** table has two identifiers: user_id and **employee_id** - the database calls exclusively use employee_id to search, select and manipulate users. Users have a one to many relationship with bookings and also relate to the department table via the foreign key dept_id. 
 
-1. The <u>Depts</u> table contains each department within the company and has a one to many relationship with users. The diagram indicates it is mandatory for uses to have a department, which is true for creating users however, it is possible for users to become detached from the departments table, if their department is deleted by a DB administrator
+1. The **Depts** table contains each department within the company and has a one to many relationship with users. The diagram indicates it is mandatory for uses to have a department, which is true for creating users however, it is possible for users to become detached from the departments table, if their department is deleted by a DB administrator
 
 ![ERD](/images/ERD_ver3.png)
 
@@ -371,7 +377,7 @@ The database contains the following tables:
 
 ## R7 - Detail any third party services that your app will use
 ### FLASK
-Flask is a Python framework which is used to make creating web applications in Python easier. It is described as being flexible and lightweight, which means that while providing the tools and functionality to create both small, simple web applications and also larger, complex ones, it provides a range of customisible features and supports integration with other services needed to support the application, such as password encryption, Support Secure cookies and in-built error handling. It has its own developement server, complete with de-bugger and a unit testing module which makes it a popular choice web developers. Flask is capable of managing the HTTP request-response protocol and is particularly useful in creating RESTful APIs. [^1][def1]
+Flask is a Python framework which is used to make creating web applications in Python easier. It is described as being flexible and lightweight, which means that while providing the tools and functionality to create both small, simple web applications and also larger, complex ones, it provides a range of customisable features and supports integration with other services needed to support the application, such as password encryption, Support Secure cookies and in-built error handling. It has its own development server, complete with debugger and a unit testing module which makes it a popular choice for web developers. Flask is capable of managing the HTTP request-response protocol and is particularly useful in creating RESTful APIs.
 
 ### POSTGRESQL
 PostgreSQL is an open-source relational database widely used for data storage in web applications. It has many powerful features and supports a range of popular programming languages. This app has specifically taken advantage of its ability to handle user-defined types, the referential integrity when using foreign keys, its ability to work well with plug-ins and extensions as well as its extensibility, meaning it has the scope to grow as the business requirements evolve.
@@ -383,11 +389,11 @@ SQL Alchemy is an Object Relational Mapper (ORM). It is used to allow access to 
 Psycopg2 is a database adapter that allows the ORM (SQL Alchemy) to connect to a PostgreSQL database. It is called as part of the initial database set up and contains a URL with important security information, such as the database "user" it will assume when accessing the database as well as the name of the Postgres database to which it needs to connect.
 
 ### MARSHMALLOW
-Marshmallow is a Python library able to convert database object types into Python object types. It has powerful features allowing serialisation from JSON to Python and vice versa, making manipulating and extracting data from the database a much less labour intensive process. It comes with features that allow data validation, enforcing of mandatory fields and the nesting of data from join tables. It has its own error handling via its exception classes - this is particularly useful when targetting and handling Marshmallow specific errors.
+Marshmallow is a Python library able to convert database object types into Python object types. It has powerful features allowing serialisation from JSON to Python and vice versa, making manipulating and extracting data from the database a much less labour intensive process. It comes with features that allow data validation, enforcing of mandatory fields and the nesting of data from join tables. It has its own error handling via its exception classes - this is particularly useful when targeting and handling Marshmallow specific errors.
 
 
 ### BCRYPT
-Bcrypt is a password-storing tool, which uses complex algorithms to hash and salt passwords. This package enables users' passwords to be safely stored in the database, unable to be accessed by database administrators, and reducing the vulnerability in case of a cyber attack. The app is designed so that Bcrypt handles the password entered by a user, whether logging in or being created anew, immediately. It is a one way hash, so it is not possible to reverse the process and obtain the raw password. When the user logs in and enters their password, it is hashed in the same way as the orginal one, and the two hashed passwords are compared for similarity. Bcrypt handles each of these functions.
+Bcrypt is a password-storing tool, which uses complex algorithms to hash and salt passwords. This package enables users' passwords to be safely stored in the database, unable to be accessed by database administrators, and reducing the vulnerability in case of a cyber attack. The app is designed so that Bcrypt handles the password entered by a user, whether logging in or being created anew, immediately. It is a one way hash, so it is not possible to reverse the process and obtain the raw password. When the user logs in and enters their password, it is hashed in the same way as the original one, and the two hashed passwords are compared for similarity. Bcrypt handles each of these functions.
 
 
 ### Flask JWT Manager
@@ -408,7 +414,7 @@ The user model contains multiple schemas, with varying requirements. `UserSchema
 
 ### Department Model
 
-The department model has a one-to-many relationship with the user model, since one department can have many users. No foreign keys are required here, since the user model has the foreign key. The `relationship()` method is used so that department data `back_populates` the department field within user. `fields.Nested()` is used by the `DeptSchema`` to allow specified information about the users to be shown within each department to which they belomg.
+The department model has a one-to-many relationship with the user model, since one department can have many users. No foreign keys are required here, since the user model has the foreign key. The `relationship()` method is used so that department data `back_populates` the department field within user. `fields.Nested()` is used by the `DeptSchema`` to allow specified information about the users to be shown within each department to which they belong.
 
 ### Desk Model
 
@@ -434,7 +440,7 @@ The departments table shows all of the company's available departments. There ar
 
 The desks table shows information about desks which users can book. There are two columns: `id, available`. `id` accepts String values and would be provided by the particular company, but for this example the format is floor number, area, desk number, e.g. 2A-03 or level 2, zone A, desk 3. `available` accepts Boolean values and acts as a flag. There may be a reason for one or more desks to be "unavailable" (e.g. conference, maintenance, damage), so this variable allows admins to change the status and therefore prevent desks from being booked. There is a one-to-many relationship between desks and bookings, since one desk can have many bookings, therefore the bookings field acts as a join between the two tables. This means within the desks table, each desk has visibility of bookings with which it is associated.
 
-The bookings table provides all necessary information about a booking via the following columns: `id, week_id, weekday, desk_id, user_id, date_created`. `id` is auto-incremented and is the designated means of identiying a booking. `date_created` is automatically generated using Python's datetime package. `week_id` is an Integer value representing the week number and `weekday` is a String value identifying the day of the week for which the booking has been made. The bookings table has a one-to-one relationship with both the desks and users tables, since each booking has just one desk and one user. This relationship is established using foreign keys and allows the bookings table to display the user and desk to which it is associated.
+The bookings table provides all necessary information about a booking via the following columns: `id, week_id, weekday, desk_id, user_id, date_created`. `id` is auto-incremented and is the designated means of identifying a booking. `date_created` is automatically generated using Python's datetime package. `week_id` is an Integer value representing the week number and `weekday` is a String value identifying the day of the week for which the booking has been made. The bookings table has a one-to-one relationship with both the desks and users tables, since each booking has just one desk and one user. This relationship is established using foreign keys and allows the bookings table to display the user and desk to which it is associated.
 
 Setting up the database tables in this way means there is no overlap of information as each table has ownership for only what it needs and links to related tables to access any associated information. 
 
